@@ -7,7 +7,12 @@ const newUserSchema = yup.object().shape({
   phone: yup.string().length(10).required(),
 });
 
-const isUserDataValid = (
+const loginUserSchema = yup.object().shape({
+  email: yup.string().email().required(),
+  password: yup.string().required(),
+});
+
+export const isUserDataValid = (
   name: string,
   email: string,
   password: string,
@@ -30,4 +35,21 @@ const isUserDataValid = (
   return isValid;
 };
 
-export = isUserDataValid;
+export const isLoginDataValid = (
+  email: string,
+  password: string
+): Promise<boolean> => {
+  const isValid = loginUserSchema
+    .isValid({
+      email,
+      password,
+    })
+    .then((v) => {
+      return v;
+    })
+    .catch((e) => {
+      return false;
+    });
+
+  return isValid;
+};

@@ -1,10 +1,10 @@
 import express from "express";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
-import isUserDataValid from "../validations/validations";
+import { isUserDataValid } from "../validations/validations";
 import pool from "../db";
 import { v4 as uid } from "uuid";
-import conifg from "config";
+import config from "config";
 import { ADD_USER, ALREADY_EXIST } from "../queries";
 
 const router = express.Router();
@@ -12,7 +12,6 @@ const router = express.Router();
 //* Create a new user
 router.post("/", async (req, res) => {
   const { name, email, password, phone } = req.body;
-
   if (await isUserDataValid(name, email, password, phone)) {
     //   Hash password
     const salt = await bcryptjs.genSalt(10);
@@ -41,7 +40,7 @@ router.post("/", async (req, res) => {
         // Sign a JWT token
         jwt.sign(
           payload,
-          conifg.get("jwt"),
+          config.get("jwt"),
           { expiresIn: 360000 },
           (err, token) => {
             if (err) {
