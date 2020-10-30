@@ -1,0 +1,7 @@
+{
+  "jwt": "thisissecret",
+  "user": "e_store",
+  "password": "AwS56$ds",
+  "host": "e-store.cxmmejncuynq.ap-south-1.rds.amazonaws.com",
+  "database": "postgres"
+}
