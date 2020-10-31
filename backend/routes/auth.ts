@@ -2,10 +2,11 @@ import express from "express";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { isLoginDataValid } from "../validations/validations";
-import pool from "../db";
+import pool from "../src/db";
 import config from "config";
-import authUser from "../../middleware/auth";
-import { GET_AUTH_USER, GET_USER_BY_EMAIL } from "../queries";
+import authUser from "../middleware/auth";
+import { GET_AUTH_USER, GET_USER_BY_EMAIL } from "../src/queries";
+import { UserI } from "../interfaces/interfaces";
 
 const router = express.Router();
 
@@ -23,7 +24,9 @@ router.post("/", async (req, res) => {
     const { email, password } = req.body;
 
     if (await isLoginDataValid(email, password)) {
-      let user = await pool.query(GET_USER_BY_EMAIL, [email]);
+      let user = await pool.query<UserI, Array<string>>(GET_USER_BY_EMAIL, [
+        email,
+      ]);
 
       if (user.rowCount < 1) {
         return res.json({ errors: [{ msg: "user does not exist" }] });

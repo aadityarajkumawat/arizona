@@ -2,10 +2,11 @@ import express from "express";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { isUserDataValid } from "../validations/validations";
-import pool from "../db";
+import pool from "../src/db";
 import { v4 as uid } from "uuid";
 import config from "config";
-import { ADD_USER, ALREADY_EXIST } from "../queries";
+import { ADD_USER, ALREADY_EXIST } from "../src/queries";
+import { UserI } from "../interfaces/interfaces";
 
 const router = express.Router();
 
@@ -18,12 +19,15 @@ router.post("/", async (req, res) => {
     let hashedPassword = await bcryptjs.hash(password, salt);
     try {
       // Check if user already exist
-      const alreadyExist = await pool.query(ALREADY_EXIST, [email, phone]);
+      const alreadyExist = await pool.query<UserI, Array<string>>(
+        ALREADY_EXIST,
+        [email, phone]
+      );
       if (alreadyExist.rowCount > 0) {
         return res.json("user already exist");
       } else {
         // Create a new user
-        const addANewUser = await pool.query(ADD_USER, [
+        const addANewUser = await pool.query<UserI, Array<string>>(ADD_USER, [
           "user" + uid(),
           name,
           email,
