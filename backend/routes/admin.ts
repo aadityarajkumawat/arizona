@@ -6,7 +6,7 @@ import { ADD_PRODUCT } from "../src/queries";
 const router = express.Router();
 
 router.post("/product_admin", async (req, res) => {
-  const { product_name, product_price, category, product_img } = req.body;
+  const { product_name, product_price, category, product_image } = req.body;
 
   try {
     const addProduct = await pool.query(ADD_PRODUCT, [
@@ -14,7 +14,7 @@ router.post("/product_admin", async (req, res) => {
       product_name,
       product_price,
       category,
-      product_img,
+      product_image,
     ]);
 
     if (addProduct.rowCount > 0) {

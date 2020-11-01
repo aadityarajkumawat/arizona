@@ -11,3 +11,7 @@ export enum AuthState {
   LOGOUT = "LOGOUT",
   LOAD_USER = "LOAD_USER",
 }
+
+export enum AddProductState {
+  ADD_PRODUCT = "ADD_PRODUCT",
+}
