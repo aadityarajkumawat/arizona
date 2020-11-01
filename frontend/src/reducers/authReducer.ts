@@ -25,6 +25,7 @@ export const authReducer = (
 ): UserAuthState => {
   switch (action.type) {
     case AuthState.LOGIN_SUCCESS:
+    case AuthState.SIGNUP_SUCCESS:
       localStorage.setItem("token", action.payload);
       return {
         ...state,

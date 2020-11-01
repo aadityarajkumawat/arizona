@@ -3,13 +3,19 @@ import * as MyTypes from "MyTypes";
 import { connect } from "react-redux";
 import { FormType } from "../../reducers/authFormReducer";
 import { showLoginForm, showSignUpForm } from "../../actions/AuthFormState";
-import { login, loadUserI, logout } from "../../actions/Auth";
+import { login, loadUserI, logout, signUp } from "../../actions/Auth";
+import {
+  isLoginDataValid,
+  isUserDataValid,
+} from "../../validators/formValidators";
+import Input from "../input-field/Input";
 
 interface Props {
   authForm: FormType;
   showLoginForm: () => void;
   showSignUpForm: () => void;
   login: (formData: User) => void;
+  signUp: (formData: User) => void;
   loadUserI: () => void;
   logout: () => void;
 }
@@ -28,6 +34,7 @@ const Auth: React.FC<Props> = ({
   login,
   loadUserI,
   logout,
+  signUp,
 }) => {
   const [user, setUser] = useState<User>({
     email: "",
@@ -43,49 +50,37 @@ const Auth: React.FC<Props> = ({
     setUser((prevUser) => ({ ...prevUser, [name]: value }));
   };
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    login(user);
+    if (
+      authForm.formType === "login" &&
+      (await isLoginDataValid(email, password))
+    ) {
+      login(user);
+    } else {
+      if (await isUserDataValid(name, email, password, phone)) {
+        signUp(user);
+      } else {
+        console.log("Please enter correct info");
+      }
+    }
     loadUserI();
+    setUser({ email: "", name: "", password: "", phone: "" });
   };
 
   return (
     <form onSubmit={onSubmit}>
       {authForm.formType === "signup" && (
-        <input
-          type="text"
-          placeholder="Name"
-          name="name"
-          // autoComplete="off"
-          onChange={handleOnChange}
-          value={name}
-        />
+        <Input iType="name" changeListener={handleOnChange} iValue={name} />
       )}
-      <input
-        type="email"
-        placeholder="Email"
-        name="email"
-        // autoComplete="off"
-        onChange={handleOnChange}
-        value={email}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        name="password"
-        // autoComplete="off"
-        onChange={handleOnChange}
-        value={password}
+      <Input iType="email" changeListener={handleOnChange} iValue={email} />
+      <Input
+        iType="password"
+        changeListener={handleOnChange}
+        iValue={password}
       />
       {authForm.formType === "signup" && (
-        <input
-          type="phone"
-          placeholder="Phone"
-          name="phone"
-          // autoComplete="off"
-          onChange={handleOnChange}
-          value={phone}
-        />
+        <Input iType="phone" changeListener={handleOnChange} iValue={phone} />
       )}
       <button type="submit">
         {authForm.formType === "login" ? "Login" : "Sign Up"}
@@ -114,6 +109,7 @@ const mapDispatchToProps = () => ({
   login,
   loadUserI,
   logout,
+  signUp,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps())(Auth);

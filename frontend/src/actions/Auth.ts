@@ -2,7 +2,7 @@ import { Dispatch } from "redux";
 import { action } from "typesafe-actions";
 import { AuthState } from "./types";
 import * as MyTypes from "MyTypes";
-import { User } from "../components/auth/Auth";
+import Auth, { User } from "../components/auth/Auth";
 import Axios from "axios";
 import setAuthToken from "../helpers/setAuthToken";
 
@@ -24,7 +24,8 @@ export const authAction = {
   loginSuccess: (tokenObject: Token) =>
     action(AuthState.LOGIN_SUCCESS, tokenObject),
   loginFail: () => action(AuthState.LOGIN_FAIL),
-  signUpSuccess: () => action(AuthState.SIGNUP_SUCCESS),
+  signUpSuccess: (tokenObject: Token) =>
+    action(AuthState.SIGNUP_SUCCESS, tokenObject),
   signUpFail: () => action(AuthState.SIGNUP_FAIL),
   logout: () => action(AuthState.LOGOUT),
   loadUser: (user: LoadedUser) => action(AuthState.LOAD_USER, user),
@@ -57,6 +58,24 @@ export const login = (formData: User) => async (
     dispatch({ type: AuthState.LOGIN_SUCCESS, payload: res.data.token });
   } catch (err) {
     dispatch({ type: AuthState.LOGIN_FAIL });
+    console.log(err);
+  }
+};
+
+export const signUp = (formData: User) => async (
+  dispatch: Dispatch<MyTypes.RootAction>
+) => {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  try {
+    const res = await Axios.post<TokenObject>("/api/users", formData, config);
+    dispatch({ type: AuthState.SIGNUP_SUCCESS, payload: res.data.token });
+    console.log(res.data);
+  } catch (err) {
+    dispatch({ type: AuthState.SIGNUP_FAIL });
     console.log(err);
   }
 };
