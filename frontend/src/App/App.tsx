@@ -8,6 +8,7 @@ import { loadUserI } from "../actions/Auth";
 import { connect } from "react-redux";
 import * as MyTypes from "MyTypes";
 import { UserAuthState } from "../reducers/authReducer";
+import Navbar from "../components/navbar/Navbar";
 
 interface Props {
   auth: UserAuthState;
@@ -27,6 +28,7 @@ const App: React.FC<Props> = ({ loadUserI, auth }) => {
   return (
     <Router>
       <div className="App">
+        <Navbar />
         <Switch>
           <Routes />
         </Switch>

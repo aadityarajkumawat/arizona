@@ -15,3 +15,9 @@ export enum AuthState {
 export enum AddProductState {
   ADD_PRODUCT = "ADD_PRODUCT",
 }
+
+export enum NavbarState {
+  DESK_TYPE = "DESK_TYPE",
+  MOB_TYPE = "MOB_TYPE",
+  NAV_TYPE = "NAV_TYPE",
+}
