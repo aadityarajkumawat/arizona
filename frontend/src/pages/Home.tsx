@@ -13,14 +13,17 @@ import BannerImg from "../img/homeimg.png";
 import HomeDisplay from "../components/home-display/HomeDisplay";
 import { connect } from "react-redux";
 import { toggleMUNav } from "../actions/Navbar";
+import { resetSubmitState } from "../actions/Auth";
 
 interface Props {
   toggleMUNav: (T: boolean) => void;
+  resetSubmitState: () => void;
 }
 
-const Home: React.FC<Props> = ({ toggleMUNav }) => {
+const Home: React.FC<Props> = ({ toggleMUNav, resetSubmitState }) => {
   useEffect(() => {
     toggleMUNav(true);
+    resetSubmitState();
   }, []);
   return (
     <HomeContainer>
@@ -44,4 +47,4 @@ const Home: React.FC<Props> = ({ toggleMUNav }) => {
   );
 };
 
-export default connect(null, { toggleMUNav })(Home);
+export default connect(null, { toggleMUNav, resetSubmitState })(Home);

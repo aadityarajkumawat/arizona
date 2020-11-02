@@ -9,6 +9,7 @@ export interface UserAuthState {
   user: LoadedUser;
   loading: boolean;
   errors: any;
+  formSubmitted: boolean;
 }
 
 const init: UserAuthState = {
@@ -17,6 +18,7 @@ const init: UserAuthState = {
   user: { user_id: "", name: "", cart_id: "", email: "", phone: "" },
   loading: true,
   errors: null,
+  formSubmitted: false,
 };
 
 export const authReducer = (
@@ -53,6 +55,16 @@ export const authReducer = (
         user: { user_id: "", name: "", cart_id: "", email: "", phone: "" },
         loading: false,
         errors: null,
+      };
+    case AuthState.FORM_SUBMIT:
+      return {
+        ...state,
+        formSubmitted: true,
+      };
+    case AuthState.RESET_FORM_STATE:
+      return {
+        ...state,
+        formSubmitted: false,
       };
     default:
       return state;

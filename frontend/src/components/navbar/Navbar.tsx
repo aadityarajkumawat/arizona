@@ -19,13 +19,18 @@ import { showDeskType, showMobType, toggleNav } from "../../actions/Navbar";
 import { NavbarStateI } from "../../reducers/navReducer";
 import { Link } from "react-router-dom";
 import { toggleMUNav } from "../../actions/Navbar";
+import { UserAuthState } from "../../reducers/authReducer";
+import { logout, resetSubmitState } from "../../actions/Auth";
 
 interface Props {
   showDeskType: () => void;
   showMobType: () => void;
   toggleNav: (T: boolean) => void;
   toggleMUNav: (T: boolean) => void;
+  logout: () => void;
+  resetSubmitState: () => void;
   nav: NavbarStateI;
+  auth: UserAuthState;
 }
 
 interface NavlinksAnimation {
@@ -40,7 +45,10 @@ const Navbar: React.FC<Props> = ({
   showMobType,
   toggleNav,
   toggleMUNav,
+  logout,
+  resetSubmitState,
   nav,
+  auth,
 }) => {
   const matches = useMediaQuery("(max-width: 1300px)");
   const [searchAnimation, setSearchAnimation] = useState({ opacity: 1 });
@@ -80,6 +88,12 @@ const Navbar: React.FC<Props> = ({
       setSearchAnimation((prev) => ({ ...prev, opacity: 0 }));
     } else {
       setSearchAnimation((prev) => ({ ...prev, opacity: 1 }));
+    }
+  };
+
+  const logoutFromHere = () => {
+    if (auth.isAuthenticated) {
+      logout();
     }
   };
 
@@ -166,7 +180,9 @@ const Navbar: React.FC<Props> = ({
                   }}
                   navType={nav.setNavOpen}
                 >
-                  <Link to="/auth">Login</Link>
+                  <Link to={"/auth"} onClick={logoutFromHere}>
+                    {auth.isAuthenticated ? "Logout" : "Login"}
+                  </Link>
                 </ListItem>
                 <ListItem
                   animate={{ x: animation.x, opacity: animation.opacity }}
@@ -195,6 +211,7 @@ const Navbar: React.FC<Props> = ({
 };
 const mapStateToProps = (store: MyTypes.ReducerState) => ({
   nav: store.nav,
+  auth: store.auth,
 });
 
 export default connect(mapStateToProps, {
@@ -202,4 +219,6 @@ export default connect(mapStateToProps, {
   showDeskType,
   toggleMUNav,
   toggleNav,
+  logout,
+  resetSubmitState,
 })(Navbar);

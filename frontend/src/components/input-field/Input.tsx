@@ -16,6 +16,7 @@ const Input: React.FC<Props> = ({ iType, changeListener, iValue }) => {
       autoComplete="off"
       onChange={changeListener}
       value={iValue}
+      spellCheck="false"
     />
   );
 };

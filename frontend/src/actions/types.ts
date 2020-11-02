@@ -10,6 +10,8 @@ export enum AuthState {
   SIGNUP_FAIL = "SIGNUP_FAIL",
   LOGOUT = "LOGOUT",
   LOAD_USER = "LOAD_USER",
+  FORM_SUBMIT = "FORM_SUBMIT",
+  RESET_FORM_STATE = "RESET_FORM_STATE",
 }
 
 export enum AddProductState {
@@ -20,5 +22,5 @@ export enum NavbarState {
   DESK_TYPE = "DESK_TYPE",
   MOB_TYPE = "MOB_TYPE",
   NAV_TYPE = "NAV_TYPE",
-  MU_NAV = "MU_TYPE",
+  MU_NAV = "MU_NAV",
 }

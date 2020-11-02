@@ -15,9 +15,11 @@ import {
   ShowOtherForm,
   SubmitFormButton,
 } from "./auth.styles";
+import { UserAuthState } from "../../reducers/authReducer";
 
 interface Props {
   authForm: FormType;
+  auth: UserAuthState;
   showLoginForm: () => void;
   showSignUpForm: () => void;
   login: (formData: User) => void;
@@ -35,6 +37,7 @@ export interface User {
 
 const Auth: React.FC<Props> = ({
   authForm,
+  auth,
   showLoginForm,
   showSignUpForm,
   login,
@@ -73,6 +76,7 @@ const Auth: React.FC<Props> = ({
     loadUserI();
     setUser({ email: "", name: "", password: "", phone: "" });
   };
+  
 
   return (
     <AuthForm onSubmit={onSubmit}>
@@ -88,7 +92,7 @@ const Auth: React.FC<Props> = ({
       {authForm.formType === "signup" && (
         <Input iType="phone" changeListener={handleOnChange} iValue={phone} />
       )}
-      <SubmitFormButton type="submit">
+      <SubmitFormButton type="submit" subState={auth.formSubmitted}>
         {authForm.formType === "login" ? "Login" : "Sign Up"}
       </SubmitFormButton>
 

@@ -1,6 +1,10 @@
 import styled from "styled-components";
 import { motion } from "framer-motion";
 
+interface AuthStyles {
+  subState: boolean;
+}
+
 export const FormContainer = styled.div`
   width: 100%;
   height: 500px;
@@ -21,6 +25,45 @@ export const ArizonaName = styled.div`
   text-align: center;
   font-size: 30px;
   font-weight: 600;
+  position: relative;
+`;
+
+export const BackButton = styled.div`
+  width: 40px;
+  height: 36px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 10px;
+
+  &:hover {
+    background-color: #eee;
+    cursor: pointer;
+  }
+`;
+
+export const BackWrapperContainer = styled.div`
+  position: relative;
+  height: 36px;
+  width: 40px;
+
+  &::before,
+  &:after {
+    position: absolute;
+    content: "";
+    width: 17px;
+    height: 3px;
+    top: 21px;
+    background-color: #222;
+    left: 9px;
+    transform: rotate(45deg);
+  }
+
+  &:after {
+    top: 11px;
+    transform: rotate(-45deg);
+  }
 `;
 
 export const FormType = styled.div`
@@ -50,13 +93,13 @@ export const AuthInput = styled.input`
   }
 `;
 
-export const SubmitFormButton = styled.button`
+export const SubmitFormButton = styled.button<AuthStyles>`
   width: 350px;
   height: 35px;
   border: none;
   border-radius: 35px;
   margin-top: 10px;
-  background-color: #222;
+  background-color: ${({ subState }) => (subState ? "#22222280" : "#222")};
   color: #fff;
 
   &:focus {

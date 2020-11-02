@@ -29,6 +29,8 @@ export const authAction = {
   signUpFail: () => action(AuthState.SIGNUP_FAIL),
   logout: () => action(AuthState.LOGOUT),
   loadUser: (user: LoadedUser) => action(AuthState.LOAD_USER, user),
+  formSubmit: () => action(AuthState.FORM_SUBMIT),
+  resetSubmitState: () => action(AuthState.RESET_FORM_STATE),
 };
 
 export const loadUserI = () => async (
@@ -54,6 +56,7 @@ export const login = (formData: User) => async (
     },
   };
   try {
+    dispatch({ type: AuthState.FORM_SUBMIT });
     const res = await Axios.post<TokenObject>("/api/auth", formData, config);
     dispatch({ type: AuthState.LOGIN_SUCCESS, payload: res.data.token });
   } catch (err) {
@@ -71,6 +74,7 @@ export const signUp = (formData: User) => async (
     },
   };
   try {
+    dispatch({ type: AuthState.FORM_SUBMIT });
     const res = await Axios.post<TokenObject>("/api/users", formData, config);
     dispatch({ type: AuthState.SIGNUP_SUCCESS, payload: res.data.token });
     console.log(res.data);
@@ -82,4 +86,10 @@ export const signUp = (formData: User) => async (
 
 export const logout = () => (dispatch: Dispatch<MyTypes.RootAction>) => {
   dispatch({ type: AuthState.LOGOUT });
+};
+
+export const resetSubmitState = () => (
+  dispatch: Dispatch<MyTypes.RootAction>
+) => {
+  dispatch({ type: AuthState.RESET_FORM_STATE });
 };
