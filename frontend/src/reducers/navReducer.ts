@@ -4,11 +4,13 @@ import { NavbarState } from "../actions/types";
 export interface NavbarStateI {
   navbarType: "desk" | "mob";
   setNavOpen: boolean;
+  navIsMounted: boolean;
 }
 
 const init: NavbarStateI = {
   navbarType: "desk",
   setNavOpen: false,
+  navIsMounted: true,
 };
 
 export const navbarReducer = (
@@ -22,6 +24,8 @@ export const navbarReducer = (
       return { ...state, navbarType: "mob", setNavOpen: false };
     case NavbarState.NAV_TYPE:
       return { ...state, setNavOpen: action.payload };
+    case NavbarState.MU_NAV:
+      return { ...state, navIsMounted: action.payload };
     default:
       return state;
   }

@@ -20,4 +20,5 @@ export enum NavbarState {
   DESK_TYPE = "DESK_TYPE",
   MOB_TYPE = "MOB_TYPE",
   NAV_TYPE = "NAV_TYPE",
+  MU_NAV = "MU_TYPE",
 }

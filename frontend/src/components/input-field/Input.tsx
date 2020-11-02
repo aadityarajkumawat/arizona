@@ -1,4 +1,5 @@
 import React from "react";
+import { AuthInput } from "../auth/auth.styles";
 
 interface Props {
   iType: string;
@@ -8,7 +9,7 @@ interface Props {
 
 const Input: React.FC<Props> = ({ iType, changeListener, iValue }) => {
   return (
-    <input
+    <AuthInput
       type={iType}
       placeholder={iType}
       name={iType}

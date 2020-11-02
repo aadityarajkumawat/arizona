@@ -33,7 +33,7 @@ export const NavLinks = styled(motion.ul)<NavbarStyles>`
   height: ${({ navType }) => (navType ? "calc(100vh - 80px)" : "100%")};
   list-style: none;
   display: flex;
-  // background-color: red;
+  background-color: #fff;
   align-items: center;
   flex-direction: ${({ navType }) => (navType ? "column" : "row")};
   position: ${({ navType }) => (navType ? "absolute" : "none")};
@@ -41,18 +41,27 @@ export const NavLinks = styled(motion.ul)<NavbarStyles>`
   width: ${({ navType }) => (navType ? "100vw" : "")};
   left: 0;
   right: 0;
-
   // transform: ${({ navType }) => (navType ? "translateX(-20px)" : "")};
   padding: ${({ navType }) => (navType ? "30px 0" : "")};
 `;
 
 export const ListItem = styled(motion.li)<NavbarStyles>`
   margin: ${({ navType }) => (navType ? "10px 0" : "")};
-  margin-right: ${({ navType }) => (navType ? "0" : "25px")};
-  margin-left: ${({ navType }) => (navType ? "0" : "25px")};
+  margin-right: ${({ navType }) => (navType ? "0" : "10px")};
+  margin-left: ${({ navType }) => (navType ? "0" : "10px")};
   transform: ${({ navType }) => (navType ? "translateX(-20px)" : "")};
   padding: 0 5px;
+
+  & > a {
+    color: #222;
+    text-decoration: none;
+  }
   opacity: 0;
+  padding: 8px 10px;
+  border-radius: 15px;
+  &:hover {
+    background-color: #eee;
+  }
 `;
 
 export const HamMenu = styled.div`
@@ -87,4 +96,63 @@ export const MidHam = styled.span`
   width: 30px;
   height: 2px;
   background-color: #222;
+`;
+
+export const SearchComponent = styled(motion.li)<NavbarStyles>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 200px;
+  height: 30px;
+  margin-right: ${({ navType }) => (navType ? "0" : "25px")};
+`;
+
+export const SearchInputField = styled(motion.input)`
+  width: 0px;
+  height: 30px;
+  border: none;
+  background-color: #eee;
+  padding: 5px 15px;
+  border-top-left-radius: 30px;
+  border-bottom-left-radius: 30px;
+
+  &:active {
+    outline: 0;
+  }
+
+  &:focus {
+    outline: 0;
+  }
+`;
+
+export const CloseInputField = styled(motion.div)`
+  width: 30px;
+  height: 30px;
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+  background-color: #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+
+  &::before,
+  &::after {
+    position: absolute;
+    content: "";
+    width: 20px;
+    left: 0;
+    height: 2px;
+    border-radius: 1px;
+    top: 13px;
+    background-color: #6e6e6e;
+    transform: rotate(45deg);
+    left: 2px;
+  }
+
+  &::after {
+    transform: rotate(-45deg);
+    right: 2px;
+  }
 `;

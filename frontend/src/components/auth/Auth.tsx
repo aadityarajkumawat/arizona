@@ -9,6 +9,12 @@ import {
   isUserDataValid,
 } from "../../validators/formValidators";
 import Input from "../input-field/Input";
+import {
+  AuthForm,
+  ChangeFormType,
+  ShowOtherForm,
+  SubmitFormButton,
+} from "./auth.styles";
 
 interface Props {
   authForm: FormType;
@@ -69,7 +75,7 @@ const Auth: React.FC<Props> = ({
   };
 
   return (
-    <form onSubmit={onSubmit}>
+    <AuthForm onSubmit={onSubmit}>
       {authForm.formType === "signup" && (
         <Input iType="name" changeListener={handleOnChange} iValue={name} />
       )}
@@ -82,19 +88,21 @@ const Auth: React.FC<Props> = ({
       {authForm.formType === "signup" && (
         <Input iType="phone" changeListener={handleOnChange} iValue={phone} />
       )}
-      <button type="submit">
+      <SubmitFormButton type="submit">
         {authForm.formType === "login" ? "Login" : "Sign Up"}
-      </button>
-      <div onClick={() => logout()}>logout</div>
-      New user?{" "}
-      <div
-        onClick={() =>
-          authForm.formType === "login" ? showSignUpForm() : showLoginForm()
-        }
-      >
-        Sign Up
-      </div>
-    </form>
+      </SubmitFormButton>
+
+      <ChangeFormType>
+        New customer?
+        <ShowOtherForm
+          onClick={() =>
+            authForm.formType === "login" ? showSignUpForm() : showLoginForm()
+          }
+        >
+          Sign Up
+        </ShowOtherForm>
+      </ChangeFormType>
+    </AuthForm>
   );
 };
 
