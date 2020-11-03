@@ -24,15 +24,22 @@ interface Props {
 
 const Product: React.FC<Props> = ({ product, getProducts }) => {
   useEffect(() => {
-    if (product.products.length === 0 && localStorage.getItem("category")) {
-      //@ts-ignore
-      getProducts(localStorage.getItem("category"));
+    if (product.products.length === 0) {
+      if (
+        localStorage.getItem("category") !== product.categorySearched &&
+        product.categorySearched !== ""
+      ) {
+        getProducts(product.categorySearched);
+      } else {
+        // @ts-ignore
+        getProducts(localStorage.getItem("category"));
+      }
     } else {
       if (product.products.length > 0) {
-        localStorage.setItem("category", product.products[0].category);
+        localStorage.setItem("category", product.categorySearched);
       }
     }
-  }, [product.products.length]);
+  }, [product.products.length, product.categorySearched]);
 
   return (
     <ProductPageContainer>

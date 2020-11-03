@@ -31,5 +31,7 @@ export enum NavbarState {
 }
 
 export enum ProductTypes {
-  GET_PRODUCTS = 'GET_PRODUCTS'
+  GET_PRODUCTS = "GET_PRODUCTS",
+  SET_CATEGORY = "SET_CATEGORY",
+  CLEAR_SEARCH = "CLEAR_SEARCH",
 }

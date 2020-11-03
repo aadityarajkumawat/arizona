@@ -8,6 +8,8 @@ import Axios from "axios";
 export const productActions = {
   getProducts: (productsArray: Array<FetchedProduct>) =>
     action(ProductTypes.GET_PRODUCTS, productsArray),
+  setCategory: (cate: string) => action(ProductTypes.SET_CATEGORY, cate),
+  clearSearch: () => action(ProductTypes.CLEAR_SEARCH),
 };
 
 export const getProducts = (categoryToBeFetched: string) => async (
@@ -19,4 +21,14 @@ export const getProducts = (categoryToBeFetched: string) => async (
   } catch (err) {
     console.log(err.message);
   }
+};
+
+export const setCategory = (cate: string) => (
+  dispatch: Dispatch<MyTypes.RootAction>
+) => {
+  dispatch({ type: ProductTypes.SET_CATEGORY, payload: cate });
+};
+
+export const clearSearch = () => (dispatch: Dispatch<MyTypes.RootAction>) => {
+  dispatch({ type: ProductTypes.CLEAR_SEARCH });
 };

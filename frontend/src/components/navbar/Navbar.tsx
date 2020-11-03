@@ -27,7 +27,7 @@ import {
 } from "../../actions/Navbar";
 import { UserAuthState } from "../../reducers/authReducer";
 import { logout, resetSubmitState } from "../../actions/Auth";
-import { getProducts } from "../../actions/Products";
+import { clearSearch, getProducts, setCategory } from "../../actions/Products";
 
 interface Props {
   showDeskType: () => void;
@@ -39,6 +39,8 @@ interface Props {
   mountDropDown: () => void;
   unmountDropDown: () => void;
   getProducts: (categoryToBeFetched: string) => void;
+  setCategory: (cate: string) => void;
+  clearSearch: () => void;
   nav: NavbarStateI;
   auth: UserAuthState;
 }
@@ -54,12 +56,12 @@ const Navbar: React.FC<Props> = ({
   showDeskType,
   showMobType,
   toggleNav,
-  toggleMUNav,
   logout,
-  resetSubmitState,
   mountDropDown,
   unmountDropDown,
   getProducts,
+  setCategory,
+  clearSearch,
   nav,
   auth,
 }) => {
@@ -186,7 +188,7 @@ const Navbar: React.FC<Props> = ({
                   onHoverStart={() => mountDropDown()}
                   onHoverEnd={() => unmountDropDown()}
                 >
-                  <Link to="!#">Categories</Link>
+                  <Link to="/choose-category">Categories</Link>
                   {nav.isDropDownShown && !matches && (
                     <CategoryDropDownList
                       listener={nav.isDropDownShown}
@@ -195,28 +197,44 @@ const Navbar: React.FC<Props> = ({
                     >
                       <SubItem
                         layout
-                        onClick={() => getProducts("Jackets")}
+                        onClick={() => {
+                          clearSearch();
+                          getProducts("Jackets");
+                          setCategory("Jackets");
+                        }}
                         key="Jacket"
                       >
                         <Link to="/categories">Jackets</Link>
                       </SubItem>
                       <SubItem
                         layout
-                        onClick={() => getProducts("Hoodies")}
+                        onClick={() => {
+                          clearSearch();
+                          getProducts("Hoodies");
+                          setCategory("Hoodies");
+                        }}
                         key="Hoodies"
                       >
                         <Link to="/categories">Hoodies</Link>
                       </SubItem>
                       <SubItem
                         layout
-                        onClick={() => getProducts("Cardigans")}
+                        onClick={() => {
+                          clearSearch();
+                          getProducts("Cardigans");
+                          setCategory("Cardigans");
+                        }}
                         key="Cardigans"
                       >
                         <Link to="/categories">Cardigans</Link>
                       </SubItem>
                       <SubItem
                         layout
-                        onClick={() => getProducts("Apparels")}
+                        onClick={() => {
+                          clearSearch();
+                          getProducts("Apparels");
+                          setCategory("Apparels");
+                        }}
                         key="Apparels"
                       >
                         <Link to="/categories">Apparels</Link>
@@ -276,4 +294,6 @@ export default connect(mapStateToProps, {
   mountDropDown,
   unmountDropDown,
   getProducts,
+  setCategory,
+  clearSearch,
 })(Navbar);
