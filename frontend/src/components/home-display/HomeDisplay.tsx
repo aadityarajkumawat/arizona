@@ -19,7 +19,7 @@ const HomeDisplay: React.FC<Props> = () => {
       <HomeDisplayContent>
         <DisplayHeading>Fresh Arrivals</DisplayHeading>
         <ItemsContainer>
-          <ProductItem>
+          <ProductItem layout>
             <ProductImageContainer>
               <Img src="" />
             </ProductImageContainer>
@@ -27,7 +27,7 @@ const HomeDisplay: React.FC<Props> = () => {
               <ExploreButton>Explore</ExploreButton>
             </ExploreActionSection>
           </ProductItem>
-          <ProductItem>
+          <ProductItem layout>
             <ProductImageContainer>
               <Img src="" />
             </ProductImageContainer>
@@ -35,7 +35,7 @@ const HomeDisplay: React.FC<Props> = () => {
               <ExploreButton>Explore</ExploreButton>
             </ExploreActionSection>
           </ProductItem>
-          <ProductItem>
+          <ProductItem layout>
             <ProductImageContainer>
               <Img src="" />
             </ProductImageContainer>
@@ -43,7 +43,7 @@ const HomeDisplay: React.FC<Props> = () => {
               <ExploreButton>Explore</ExploreButton>
             </ExploreActionSection>
           </ProductItem>
-          <ProductItem>
+          <ProductItem layout>
             <ProductImageContainer>
               <Img src="" />
             </ProductImageContainer>

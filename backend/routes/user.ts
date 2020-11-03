@@ -24,7 +24,7 @@ router.post("/", async (req, res) => {
         [email, phone]
       );
       if (alreadyExist.rowCount > 0) {
-        return res.json("user already exist");
+        return res.json("User already exist");
       } else {
         // Create a new user
         const addANewUser = await pool.query<UserI, Array<string>>(ADD_USER, [

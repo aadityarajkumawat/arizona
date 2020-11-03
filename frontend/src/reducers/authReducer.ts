@@ -8,7 +8,7 @@ export interface UserAuthState {
   isAuthenticated: boolean;
   user: LoadedUser;
   loading: boolean;
-  errors: any;
+  errors: string;
   formSubmitted: boolean;
 }
 
@@ -17,7 +17,7 @@ const init: UserAuthState = {
   isAuthenticated: false,
   user: { user_id: "", name: "", cart_id: "", email: "", phone: "" },
   loading: true,
-  errors: null,
+  errors: "",
   formSubmitted: false,
 };
 
@@ -34,7 +34,7 @@ export const authReducer = (
         token: action.payload,
         isAuthenticated: true,
         loading: false,
-        errors: null,
+        errors: "",
       };
     case AuthState.LOAD_USER:
       return {
@@ -42,9 +42,17 @@ export const authReducer = (
         isAuthenticated: true,
         user: action.payload,
         loading: false,
-        errors: null,
+        errors: "",
       };
     case AuthState.LOGOUT:
+      localStorage.removeItem("token");
+      return {
+        ...state,
+        token: null,
+        isAuthenticated: false,
+        user: { user_id: "", name: "", cart_id: "", email: "", phone: "" },
+        loading: false,
+      };
     case AuthState.LOGIN_FAIL:
     case AuthState.SIGNUP_FAIL:
       localStorage.removeItem("token");
@@ -54,7 +62,7 @@ export const authReducer = (
         isAuthenticated: false,
         user: { user_id: "", name: "", cart_id: "", email: "", phone: "" },
         loading: false,
-        errors: null,
+        errors: action.payload,
       };
     case AuthState.FORM_SUBMIT:
       return {
@@ -65,6 +73,21 @@ export const authReducer = (
       return {
         ...state,
         formSubmitted: false,
+      };
+    case AuthState.CLEAR_ALERT:
+      return {
+        ...state,
+        errors: "",
+      };
+    case AuthState.LOAD_USER_FAIL:
+      return {
+        ...state,
+        errors: action.payload,
+      };
+    case AuthState.SET_ALERT:
+      return {
+        ...state,
+        errors: action.payload,
       };
     default:
       return state;

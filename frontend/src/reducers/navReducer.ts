@@ -5,12 +5,14 @@ export interface NavbarStateI {
   navbarType: "desk" | "mob";
   setNavOpen: boolean;
   navIsMounted: boolean;
+  isDropDownShown: boolean;
 }
 
 const init: NavbarStateI = {
   navbarType: "desk",
   setNavOpen: false,
   navIsMounted: true,
+  isDropDownShown: false,
 };
 
 export const navbarReducer = (
@@ -26,6 +28,10 @@ export const navbarReducer = (
       return { ...state, setNavOpen: action.payload };
     case NavbarState.MU_NAV:
       return { ...state, navIsMounted: action.payload };
+    case NavbarState.MOUNT_DROP:
+      return { ...state, isDropDownShown: true };
+    case NavbarState.UNMOUNT_DROP:
+      return { ...state, isDropDownShown: false };
     default:
       return state;
   }

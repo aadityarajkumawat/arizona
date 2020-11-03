@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { motion } from "framer-motion";
 
 interface HomeDisplayStyles {}
 
@@ -25,24 +26,34 @@ export const DisplayHeading = styled.div`
   font-weight: 600;
 `;
 
-export const ItemsContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+export const ItemsContainer = styled(motion.div)`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   width: 100%;
   height: 100%;
   margin-top: 40px;
+  align-items: center;
+  justify-items: center;
+  @media screen and (max-width: 1120px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media screen and (max-width: 570px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
 `;
 
-export const ProductItem = styled.div`
+export const ProductItem = styled(motion.div)`
   width: 244px;
   height: 316px;
   border-radius: 10px;
   box-shadow: 4px 4px 4px 0px #00000010, -4px 0px 4px 0px #00000010;
-
   @media screen and (max-width: 1330px) {
     width: 200px;
     height: 260px;
+  }
+  @media screen and (max-width: 1120px) {
+    margin-bottom: 35px;
   }
 `;
 

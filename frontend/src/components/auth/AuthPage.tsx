@@ -14,15 +14,24 @@ import { NavbarStateI } from "../../reducers/navReducer";
 import Auth from "./Auth";
 import { History } from "history";
 import { UserAuthState } from "../../reducers/authReducer";
+import Alert from "../alert/Alert";
+import { FormTypeReducer } from "../../reducers/authFormReducer";
 
 interface Props {
   toggleMUNav: (T: boolean) => void;
   nav: NavbarStateI;
   history: History;
   auth: UserAuthState;
+  authForm: FormTypeReducer;
 }
 
-const AuthPage: React.FC<Props> = ({ nav, toggleMUNav, history, auth }) => {
+const AuthPage: React.FC<Props> = ({
+  authForm,
+  nav,
+  toggleMUNav,
+  history,
+  auth,
+}) => {
   useEffect(() => {
     toggleMUNav(false);
   }, []);
@@ -48,7 +57,10 @@ const AuthPage: React.FC<Props> = ({ nav, toggleMUNav, history, auth }) => {
             </BackButton>
             A R I Z O N A
           </ArizonaName>
-          <FormType>Login</FormType>
+          <FormType>
+            {authForm.formType === "login" ? "Login" : "Sign Up"}
+          </FormType>
+          {auth.errors !== "" && <Alert errorMsg={auth.errors} />}
           <Auth />
         </FormContents>
       </FormContainer>
@@ -59,6 +71,7 @@ const AuthPage: React.FC<Props> = ({ nav, toggleMUNav, history, auth }) => {
 const mapStateToProps = (store: MyTypes.ReducerState) => ({
   nav: store.nav,
   auth: store.auth,
+  authForm: store.authForm,
 });
 
 export default connect(mapStateToProps, { toggleMUNav })(AuthPage);

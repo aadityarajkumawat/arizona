@@ -1,9 +1,17 @@
 import React, { useState } from "react";
 import * as MyTypes from "MyTypes";
 import { connect } from "react-redux";
-import { FormType } from "../../reducers/authFormReducer";
+import { FormTypeReducer} from "../../reducers/authFormReducer";
 import { showLoginForm, showSignUpForm } from "../../actions/AuthFormState";
-import { login, loadUserI, logout, signUp } from "../../actions/Auth";
+import {
+  formSubmit,
+  login,
+  loadUserI,
+  logout,
+  signUp,
+  setAlert,
+  resetSubmitState,
+} from "../../actions/Auth";
 import {
   isLoginDataValid,
   isUserDataValid,
@@ -18,7 +26,7 @@ import {
 import { UserAuthState } from "../../reducers/authReducer";
 
 interface Props {
-  authForm: FormType;
+  authForm: FormTypeReducer;
   auth: UserAuthState;
   showLoginForm: () => void;
   showSignUpForm: () => void;
@@ -26,6 +34,9 @@ interface Props {
   signUp: (formData: User) => void;
   loadUserI: () => void;
   logout: () => void;
+  setAlert: (msg: string) => void;
+  formSubmit: () => void;
+  resetSubmitState: () => void;
 }
 
 export interface User {
@@ -44,6 +55,9 @@ const Auth: React.FC<Props> = ({
   loadUserI,
   logout,
   signUp,
+  setAlert,
+  formSubmit,
+  resetSubmitState,
 }) => {
   const [user, setUser] = useState<User>({
     email: "",
@@ -61,22 +75,26 @@ const Auth: React.FC<Props> = ({
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (
-      authForm.formType === "login" &&
-      (await isLoginDataValid(email, password))
-    ) {
-      login(user);
+    formSubmit();
+    if (authForm.formType === "login") {
+      if (await isLoginDataValid(email, password)) {
+        login(user);
+      } else {
+        // LOGIN CRED ALERT
+        setAlert("Invalid credentials");
+        resetSubmitState();
+      }
     } else {
       if (await isUserDataValid(name, email, password, phone)) {
         signUp(user);
       } else {
-        console.log("Please enter correct info");
+        setAlert("Invalid credentials");
+        resetSubmitState();
       }
     }
     loadUserI();
     setUser({ email: "", name: "", password: "", phone: "" });
   };
-  
 
   return (
     <AuthForm onSubmit={onSubmit}>
@@ -97,13 +115,15 @@ const Auth: React.FC<Props> = ({
       </SubmitFormButton>
 
       <ChangeFormType>
-        New customer?
+        {authForm.formType === "login"
+          ? "New customer?"
+          : "Already a customer?"}
         <ShowOtherForm
           onClick={() =>
             authForm.formType === "login" ? showSignUpForm() : showLoginForm()
           }
         >
-          Sign Up
+          {authForm.formType === "login" ? "Sign Up" : "Login"}
         </ShowOtherForm>
       </ChangeFormType>
     </AuthForm>
@@ -122,6 +142,9 @@ const mapDispatchToProps = () => ({
   loadUserI,
   logout,
   signUp,
+  setAlert,
+  formSubmit,
+  resetSubmitState,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps())(Auth);

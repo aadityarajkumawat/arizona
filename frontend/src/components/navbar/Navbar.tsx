@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Fragment } from "react";
 import {
   BrandName,
+  CategoryDropDownList,
   CloseInputField,
   Ham,
   HamMenu,
@@ -11,6 +12,7 @@ import {
   NavLinks,
   SearchComponent,
   SearchInputField,
+  SubItem,
 } from "./navbar.styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { connect } from "react-redux";
@@ -18,9 +20,14 @@ import * as MyTypes from "MyTypes";
 import { showDeskType, showMobType, toggleNav } from "../../actions/Navbar";
 import { NavbarStateI } from "../../reducers/navReducer";
 import { Link } from "react-router-dom";
-import { toggleMUNav } from "../../actions/Navbar";
+import {
+  toggleMUNav,
+  mountDropDown,
+  unmountDropDown,
+} from "../../actions/Navbar";
 import { UserAuthState } from "../../reducers/authReducer";
 import { logout, resetSubmitState } from "../../actions/Auth";
+import { getProducts } from "../../actions/Products";
 
 interface Props {
   showDeskType: () => void;
@@ -29,6 +36,9 @@ interface Props {
   toggleMUNav: (T: boolean) => void;
   logout: () => void;
   resetSubmitState: () => void;
+  mountDropDown: () => void;
+  unmountDropDown: () => void;
+  getProducts: (categoryToBeFetched: string) => void;
   nav: NavbarStateI;
   auth: UserAuthState;
 }
@@ -47,6 +57,9 @@ const Navbar: React.FC<Props> = ({
   toggleMUNav,
   logout,
   resetSubmitState,
+  mountDropDown,
+  unmountDropDown,
+  getProducts,
   nav,
   auth,
 }) => {
@@ -163,14 +176,53 @@ const Navbar: React.FC<Props> = ({
                   <Link to="/">Home</Link>
                 </ListItem>
                 <ListItem
+                  className="category"
                   animate={{ x: animation.x, opacity: animation.opacity }}
                   transition={{
                     duration: animation.duration,
                     delay: animation.delay * 0.1,
                   }}
                   navType={nav.setNavOpen}
+                  onHoverStart={() => mountDropDown()}
+                  onHoverEnd={() => unmountDropDown()}
                 >
-                  Categories
+                  <Link to="!#">Categories</Link>
+                  {nav.isDropDownShown && !matches && (
+                    <CategoryDropDownList
+                      listener={nav.isDropDownShown}
+                      animate={{ opacity: 1, width: 200 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <SubItem
+                        layout
+                        onClick={() => getProducts("Jackets")}
+                        key="Jacket"
+                      >
+                        <Link to="/categories">Jackets</Link>
+                      </SubItem>
+                      <SubItem
+                        layout
+                        onClick={() => getProducts("Hoodies")}
+                        key="Hoodies"
+                      >
+                        <Link to="/categories">Hoodies</Link>
+                      </SubItem>
+                      <SubItem
+                        layout
+                        onClick={() => getProducts("Cardigans")}
+                        key="Cardigans"
+                      >
+                        <Link to="/categories">Cardigans</Link>
+                      </SubItem>
+                      <SubItem
+                        layout
+                        onClick={() => getProducts("Apparels")}
+                        key="Apparels"
+                      >
+                        <Link to="/categories">Apparels</Link>
+                      </SubItem>
+                    </CategoryDropDownList>
+                  )}
                 </ListItem>
                 <ListItem
                   animate={{ x: animation.x, opacity: animation.opacity }}
@@ -221,4 +273,7 @@ export default connect(mapStateToProps, {
   toggleNav,
   logout,
   resetSubmitState,
+  mountDropDown,
+  unmountDropDown,
+  getProducts,
 })(Navbar);

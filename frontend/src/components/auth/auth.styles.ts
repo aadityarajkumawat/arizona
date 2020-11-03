@@ -77,9 +77,10 @@ export const AuthForm = styled.form`
   display: flex;
   align-items: center;
   flex-direction: column;
+  transition: all 1s ease;
 `;
 
-export const AuthInput = styled.input`
+export const AuthInput = styled(motion.input)`
   width: 350px;
   height: 35px;
   border: none;
@@ -87,7 +88,7 @@ export const AuthInput = styled.input`
   margin-bottom: 10px;
   padding: 8px 20px;
   background-color: #eee;
-
+  opacity: 0;
   &:focus {
     outline: none;
   }

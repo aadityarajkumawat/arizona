@@ -29,7 +29,9 @@ router.post("/", async (req, res) => {
       ]);
 
       if (user.rowCount < 1) {
-        return res.json({ errors: [{ msg: "user does not exist" }] });
+        return res
+          .status(400)
+          .json({ errors: [{ msg: "User does not exist" }] });
       }
 
       const doesPasswordMatch = await bcryptjs.compare(
@@ -37,7 +39,9 @@ router.post("/", async (req, res) => {
         user.rows[user.rowCount - 1].password
       );
       if (!doesPasswordMatch) {
-        return res.json({ errors: [{ msg: "user does not exist" }] });
+        return res
+          .status(400)
+          .json({ errors: [{ msg: "User does not exist" }] });
       }
 
       const payload = {

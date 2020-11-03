@@ -1,18 +1,18 @@
 import * as MyTypes from "MyTypes";
 import { AuthFormState } from "../actions/types";
 
-export interface FormType {
+export interface FormTypeReducer {
   formType: string;
 }
 
-const init: FormType = {
+const init: FormTypeReducer = {
   formType: "login",
 };
 
 export const authFormReducer = (
-  state: FormType = init,
+  state: FormTypeReducer = init,
   action: MyTypes.RootAction
-): FormType => {
+): FormTypeReducer => {
   switch (action.type) {
     case AuthFormState.SHOW_LOGIN_FORM:
       return { ...state, formType: "login" };

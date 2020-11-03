@@ -12,6 +12,9 @@ export enum AuthState {
   LOAD_USER = "LOAD_USER",
   FORM_SUBMIT = "FORM_SUBMIT",
   RESET_FORM_STATE = "RESET_FORM_STATE",
+  LOAD_USER_FAIL = "LOAD_USER_FAIL",
+  CLEAR_ALERT = "CLEAR_ALERT",
+  SET_ALERT = "SET_ALERT",
 }
 
 export enum AddProductState {
@@ -23,4 +26,10 @@ export enum NavbarState {
   MOB_TYPE = "MOB_TYPE",
   NAV_TYPE = "NAV_TYPE",
   MU_NAV = "MU_NAV",
+  MOUNT_DROP = "MOUNT_DROP",
+  UNMOUNT_DROP = "UNMOUNT_DROP",
+}
+
+export enum ProductTypes {
+  GET_PRODUCTS = 'GET_PRODUCTS'
 }

@@ -5,6 +5,10 @@ interface NavbarStyles {
   navType: boolean;
 }
 
+interface DropDownStyled {
+  listener: boolean;
+}
+
 export const NavbarParentContainer = styled.div`
   width: 100vw;
   height: 80px;
@@ -43,6 +47,11 @@ export const NavLinks = styled(motion.ul)<NavbarStyles>`
   right: 0;
   // transform: ${({ navType }) => (navType ? "translateX(-20px)" : "")};
   padding: ${({ navType }) => (navType ? "30px 0" : "")};
+
+  .category {
+    border-bottom-left-radius: ${({ navType }) => (navType ? "15px" : "0")};
+    border-bottom-right-radius: ${({ navType }) => (navType ? "15px" : "0")};
+  }
 `;
 
 export const ListItem = styled(motion.li)<NavbarStyles>`
@@ -154,5 +163,41 @@ export const CloseInputField = styled(motion.div)`
   &::after {
     transform: rotate(-45deg);
     right: 2px;
+  }
+`;
+
+export const CategoryDropDownList = styled(motion.ul)<DropDownStyled>`
+  position: absolute;
+  margin-top: 1rem;
+  // left: 0;
+  width: 120px;
+  right: 0;
+  background-color: #eee;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 5px;
+  top: 19px;
+  border-radius: 10px;
+  border-top-right-radius: 0;
+  box-shadow: 0px 4px 4px 0px #00000012;
+  opacity: 0;
+
+  &:last-child {
+    border-bottom: none;
+  }
+`;
+
+export const SubItem = styled(motion.li)`
+  width: 100%;
+  text-align: center;
+  margin: 5px 0;
+  margin-top: 0px;
+  border-bottom: 1px solid #00000010;
+  padding: 5px 0;
+  &:last-child {
+    border-bottom: none;
   }
 `;
