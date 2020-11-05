@@ -73,4 +73,22 @@ router.post("/remove_one", authUser, async (req, res) => {
   }
 });
 
+router.get("/", authUser, async (req, res) => {
+  const { cart_id } = req.body;
+  try {
+    const getAllProducts = await pool.query(
+      "SELECT p_ids FROM carts WHERE cart_id=$1",
+      [cart_id]
+    );
+    if (getAllProducts.rowCount > 0) {
+      res
+        .status(200)
+        .json(getAllProducts.rows[getAllProducts.rowCount - 1].p_ids);
+    }
+  } catch (err) {
+    console.log(err.message);
+    res.status(400).json("unable to fetch products");
+  }
+});
+
 export = router;

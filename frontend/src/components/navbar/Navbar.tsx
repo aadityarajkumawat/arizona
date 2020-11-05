@@ -262,7 +262,7 @@ const Navbar: React.FC<Props> = ({
                   }}
                   navType={nav.setNavOpen}
                 >
-                  Cart
+                  <Link to="/cart">Cart</Link>
                 </ListItem>
               </NavLinks>
             )}

@@ -12,7 +12,9 @@ export const ProductPageContainer = styled.div`
 export const ProductContentsContainer = styled.div`
   width: 80%;
   height: 100%;
+  max-width: 1300px;
 `;
+
 export const ProductHeader = styled.div`
   width: 100%;
   height: 70px;
@@ -24,16 +26,15 @@ export const ProductHeader = styled.div`
 
 export const ProductList = styled.div`
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
 `;
 
 export const ProductItemMain = styled.div`
-  width: 100%;
-  height: 260px;
+  width: 330px;
+  height: 500px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   margin: 10px 0;
@@ -50,9 +51,14 @@ export const LeftImage = styled.div`
 `;
 
 export const RightInfo = styled.div`
-  width: calc(100% - 260px);
-  height: 260px;
+  width: 100%;
+  // height: ;
+  text-align: center;
   padding: 25px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
 export const ProductImageMain = styled.img`
@@ -76,4 +82,15 @@ export const ProductPrice = styled.div`
 export const ProductCategory = styled.div`
   font-size: 18px;
   font-weight: 500;
+`;
+
+export const AddToCartButton = styled.button`
+  width: 280px;
+  height: 35px;
+  background-color: #222;
+  border: none;
+  color: #eee;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  cursor: pointer;
 `;

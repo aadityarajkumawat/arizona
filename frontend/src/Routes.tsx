@@ -6,6 +6,7 @@ import AdminDashboard from "./admin/AdminDashboard";
 import AuthPage from "./components/auth/AuthPage";
 import Product from "./pages/Products";
 import Categories from "./pages/Categories";
+import Cart from "./pages/Cart";
 
 interface Props {}
 
@@ -17,6 +18,7 @@ const Routes: React.FC<Props> = () => {
       <Route exact path="/admin" component={AdminDashboard} />
       <Route exact path="/categories" component={Product} />
       <Route exact path="/choose-category" component={Categories} />
+      <Route exact path="/cart" component={Cart} />
     </Fragment>
   );
 };

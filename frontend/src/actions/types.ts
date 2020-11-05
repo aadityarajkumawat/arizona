@@ -35,3 +35,9 @@ export enum ProductTypes {
   SET_CATEGORY = "SET_CATEGORY",
   CLEAR_SEARCH = "CLEAR_SEARCH",
 }
+
+export enum CartTypes {
+  ADD_PRODUCT_CART = "ADD_PRODUCT_CART",
+  REMOVE_ONE_CART = "REMOVE_ONE_CART",
+  INC_ONE = 'INC_ONE'
+}

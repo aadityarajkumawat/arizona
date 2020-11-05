@@ -200,4 +200,12 @@ export const SubItem = styled(motion.li)`
   &:last-child {
     border-bottom: none;
   }
+  & > a {
+    text-decoration: none;
+    color: #222;
+
+    &:hover {
+      color: #22222250;
+    }
+  }
 `;
