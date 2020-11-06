@@ -1,15 +1,8 @@
 import express from "express";
 import pool from "../src/db";
+import { FetchedProducts } from "../interfaces/interfaces";
 
 const router = express.Router();
-
-interface FetchedProducts {
-  product_id: string;
-  product_name: string;
-  product_price: string;
-  category: string;
-  product_img: string;
-}
 
 router.get("/:category", async (req, res) => {
   try {

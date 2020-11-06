@@ -1,14 +1,13 @@
 import * as MyTypes from "MyTypes";
+import { CartProducts } from "../actions/Cart";
 import { CartTypes } from "../actions/types";
 
 export interface CartReducerState {
-  cart_id: string;
-  products: Array<string>;
+  cartProducts: Array<CartProducts>;
 }
 
 const init: CartReducerState = {
-  cart_id: "",
-  products: [],
+  cartProducts: [],
 };
 
 export const cartReducer = (
@@ -17,11 +16,13 @@ export const cartReducer = (
 ): CartReducerState => {
   switch (action.type) {
     case CartTypes.ADD_PRODUCT_CART:
+      localStorage.setItem("cart", JSON.stringify(action.payload));
       return {
         ...state,
-        cart_id: action.payload.cart_id,
-        products: action.payload.p_ids,
+        cartProducts: action.payload,
       };
+    case CartTypes.GET_CART_PRODUCTS:
+      return { ...state, cartProducts: action.payload };
     default:
       return state;
   }

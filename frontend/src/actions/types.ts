@@ -39,5 +39,6 @@ export enum ProductTypes {
 export enum CartTypes {
   ADD_PRODUCT_CART = "ADD_PRODUCT_CART",
   REMOVE_ONE_CART = "REMOVE_ONE_CART",
-  INC_ONE = 'INC_ONE'
+  GET_CART_PRODUCTS = "GET_CART_PRODUCTS",
+  ADDED_TRUE = "ADDED_TRUE",
 }

@@ -17,14 +17,14 @@ import { connect } from "react-redux";
 import * as MyTypes from "MyTypes";
 import { ProductStateI } from "../reducers/productReducer";
 import { getProducts } from "../actions/Products";
-import { AddProductData, addProductToCart } from "../actions/Cart";
+import { addProductToCart, ProductData } from "../actions/Cart";
 import { UserAuthState } from "../reducers/authReducer";
 
 interface Props {
   product: ProductStateI;
   auth: UserAuthState;
   getProducts: (categoryToFetch: string) => void;
-  addProductToCart: (prodData: AddProductData) => void;
+  addProductToCart: (productData: ProductData) => void;
 }
 
 const Product: React.FC<Props> = ({
@@ -48,8 +48,20 @@ const Product: React.FC<Props> = ({
     }
   }, [product.products.length, product.categorySearched]);
 
-  const addThisProductToCart = (thisProductId: string) => {
-    addProductToCart({ cart_id: auth.user.cart_id, product_id: thisProductId });
+  const addThisProductToCart = (
+    product_name: string,
+    product_price: string,
+    category: string,
+    product_img: string,
+    product_id: string
+  ) => {
+    addProductToCart({
+      product_name,
+      product_price,
+      category,
+      product_img,
+      product_id,
+    });
   };
 
   return (
@@ -69,7 +81,15 @@ const Product: React.FC<Props> = ({
                 <ProductName>{product.product_name}</ProductName>
                 <ProductPrice>Rs. {product.product_price}</ProductPrice>
                 <AddToCartButton
-                  onClick={() => addThisProductToCart(product.product_id)}
+                  onClick={() =>
+                    addThisProductToCart(
+                      product.product_name,
+                      product.product_price,
+                      product.category,
+                      product.product_img,
+                      product.product_id
+                    )
+                  }
                 >
                   Add to Cart
                 </AddToCartButton>

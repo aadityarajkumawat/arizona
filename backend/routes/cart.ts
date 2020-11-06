@@ -2,13 +2,18 @@ import express from "express";
 import pool from "../src/db";
 import authUser from "../middleware/auth";
 import { ADD_CART, GET_CART, INSERT_CART, REMOVE_ONE } from "../src/queries";
-import { ProductInfo } from "../interfaces/interfaces";
+import { CartProducts, ProductInfo } from "../interfaces/interfaces";
 import {
   getStringArray,
   removeFirstOccurence,
 } from "../helpers/removeFirstOccurence";
+import { v4 as uid } from "uuid";
 
 const router = express.Router();
+
+interface ProductIdArray {
+  p_ids: Array<string>;
+}
 
 router.post("/add_one", authUser, async (req, res) => {
   const { cart_id, product_id } = req.body;
@@ -22,10 +27,16 @@ router.post("/add_one", authUser, async (req, res) => {
         return res.json(userCart.rows[userCart.rowCount - 1]);
       }
     } else {
+      userCart = await pool.query("SELECT p_ids FROM carts WHERE cart_id=$1", [
+        cart_id,
+      ]);
+
+      let initialItems = userCart.rows[0].p_ids.length;
+
       userCart = await pool.query(ADD_CART, [product_id, cart_id]);
 
-      if (userCart.rowCount > 0) {
-        return res.json(userCart.rows[userCart.rowCount - 1]);
+      if (initialItems < userCart.rows[userCart.rowCount - 1].p_ids.length) {
+        return res.json(`--ADDED--${uid()}`);
       }
     }
   } catch (err) {
@@ -73,17 +84,38 @@ router.post("/remove_one", authUser, async (req, res) => {
   }
 });
 
-router.get("/", authUser, async (req, res) => {
+router.post("/", authUser, async (req, res) => {
   const { cart_id } = req.body;
   try {
-    const getAllProducts = await pool.query(
+    const getAllProducts = await pool.query<ProductIdArray, Array<string>>(
       "SELECT p_ids FROM carts WHERE cart_id=$1",
       [cart_id]
     );
+
     if (getAllProducts.rowCount > 0) {
-      res
-        .status(200)
-        .json(getAllProducts.rows[getAllProducts.rowCount - 1].p_ids);
+      const allPids = getAllProducts.rows[getAllProducts.rowCount - 1].p_ids;
+      const uniqueIds = allPids.filter((c, index) => {
+        return allPids.indexOf(c) === index;
+      });
+
+      let quantity = 0;
+      let finalData: Array<CartProducts> = [];
+      for (let pid of uniqueIds) {
+        quantity = 0;
+        const getThisProduct = await pool.query(
+          "SELECT * FROM products WHERE product_id=$1",
+          [pid]
+        );
+
+        for (let duplicateID of allPids) {
+          if (duplicateID === pid) {
+            quantity++;
+          }
+        }
+
+        finalData.push({ ...getThisProduct.rows[0], quantity: quantity });
+      }
+      res.status(200).json(finalData);
     }
   } catch (err) {
     console.log(err.message);

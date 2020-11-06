@@ -98,14 +98,48 @@ export const CartProductName = styled.div`
   font-weight: 500;
 `;
 
-export const ItemQuantityPicker = styled.select`
-  width: 80px;
+export const QuantitySelector = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 90px;
   height: 30px;
-  border: none;
-  border-radius: 5px;
-  padding-left: 10px;
+  // background-color: red;
+  border-radius: 8px;
 `;
 
-export const QuantityOptions = styled.option`
-  border: none;
+export const DescButton = styled.div`
+  width: 30px;
+  height: 30px;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  display: flex;
+  justify-content: center;
+  background-color: #222;
+  color: #eee;
+  cursor: pointer;
+  align-items: center;
+`;
+
+export const ActualQuantity = styled.div`
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  cursor: none;
+  align-items: center;
+  background-color: white;
+`;
+
+export const IncButton = styled.div`
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom-right-radius: 8px;
+  color: #eee;
+  border-top-right-radius: 8px;
+  cursor: pointer;
+  background-color: #222;
 `;

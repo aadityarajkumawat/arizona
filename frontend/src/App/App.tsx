@@ -18,6 +18,9 @@ interface Props {
 if (localStorage) {
   if (localStorage.getItem("token")) {
     setAuthToken(localStorage.getItem("token"));
+    if (!localStorage.getItem("cart")) {
+      localStorage.setItem("cart", "[]");
+    }
   }
 }
 
