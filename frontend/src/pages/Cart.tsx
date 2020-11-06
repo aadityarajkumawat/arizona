@@ -1,6 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ActualQuantity,
+  BillFieldContainer,
+  BillFieldName,
+  BillFieldValue,
   CartBill,
   CartCheckBox,
   CartContainer,
@@ -14,18 +17,19 @@ import {
   CartProductName,
   CartProductPrice,
   CheckBox,
+  CheckoutButton,
   DescButton,
   IncButton,
   MainCartItem,
   QuantitySelector,
+  WhenCartIsEmpty,
 } from "./cart.styles";
 import {
   getCart,
-  ResBodyGetProducts,
   addProductToCart,
-  AddProductData,
-  setAddingTrue,
   ProductData,
+  decProductCount,
+  checkUnCheck,
 } from "../actions/Cart";
 import { connect } from "react-redux";
 import * as MyTypes from "MyTypes";
@@ -39,22 +43,29 @@ interface Props {
   getCart: () => void;
   loadUserI: () => void;
   addProductToCart: (prodData: ProductData) => void;
-  setAddingTrue: () => void;
+  decProductCount: (prodData: ProductData) => void;
+  checkUnCheck: (prodData: ProductData) => void;
 }
 
 const Cart: React.FC<Props> = ({
   loadUserI,
   getCart,
   addProductToCart,
-  setAddingTrue,
+  decProductCount,
+  checkUnCheck,
   cart,
   auth,
 }) => {
+  const [bill, setBill] = useState<number>(0);
+
   useEffect(() => {
     loadUserI();
-    console.log(auth.user.cart_id);
     getCart();
   }, [auth.user.cart_id]);
+
+  useEffect(() => {
+    getTotalBill();
+  }, [JSON.stringify(cart.cartProducts)]);
 
   const IncQuantity = (
     product_name: string,
@@ -63,7 +74,6 @@ const Cart: React.FC<Props> = ({
     product_img: string,
     product_id: string
   ) => {
-    setAddingTrue();
     addProductToCart({
       product_name,
       product_price,
@@ -73,17 +83,46 @@ const Cart: React.FC<Props> = ({
     });
   };
 
+  const DecQuantity = (
+    product_name: string,
+    product_price: string,
+    category: string,
+    product_img: string,
+    product_id: string
+  ) => {
+    decProductCount({
+      product_name,
+      product_price,
+      category,
+      product_img,
+      product_id,
+    });
+  };
+
+  const getTotalBill = () => {
+    let totalBill = 0;
+    for (let product of cart.cartProducts) {
+      if (product.checked) {
+        totalBill += Number(product.product_price) * product.quantity;
+      }
+    }
+    setBill(totalBill);
+  };
+
   return (
     <CartContainer>
       <CartContents>
         <CartPageName>Shopping Cart</CartPageName>
         <CartItemsAndBillWrapper>
           <CartItems>
-            {cart.cartProducts &&
+            {cart.cartProducts.length > 0 ? (
               cart.cartProducts.map((product) => (
                 <CartItem>
                   <CartCheckBox>
-                    <CheckBox></CheckBox>
+                    <CheckBox
+                      checkB={product.checked}
+                      onClick={() => checkUnCheck(product)}
+                    ></CheckBox>
                   </CartCheckBox>
                   <MainCartItem>
                     <CartProductImage src={product.product_img} />
@@ -93,7 +132,19 @@ const Cart: React.FC<Props> = ({
                         Rs. {product.product_price}
                       </CartProductPrice>
                       <QuantitySelector>
-                        <DescButton> - </DescButton>
+                        <DescButton
+                          onClick={() =>
+                            DecQuantity(
+                              product.product_name,
+                              product.product_price,
+                              product.category,
+                              product.product_img,
+                              product.product_id
+                            )
+                          }
+                        >
+                          -
+                        </DescButton>
                         <ActualQuantity>{product.quantity}</ActualQuantity>
                         <IncButton
                           onClick={() =>
@@ -112,9 +163,27 @@ const Cart: React.FC<Props> = ({
                     </CartProductInfo>
                   </MainCartItem>
                 </CartItem>
-              ))}
+              ))
+            ) : (
+              <WhenCartIsEmpty>Your cart is empty \__/</WhenCartIsEmpty>
+            )}
           </CartItems>
-          <CartBill></CartBill>
+          <CartBill>
+            <BillFieldContainer>
+              <BillFieldName>Total Items:</BillFieldName>
+              <BillFieldValue>{cart.cartProducts.length}</BillFieldValue>
+            </BillFieldContainer>
+            <BillFieldContainer>
+              <BillFieldName>Total Bill:</BillFieldName>
+              <BillFieldValue>Rs. {bill}</BillFieldValue>
+            </BillFieldContainer>
+            <BillFieldContainer>
+              <BillFieldName>Delivery Charges</BillFieldName>
+              <BillFieldValue>Rs. 100</BillFieldValue>
+            </BillFieldContainer>
+
+            <CheckoutButton>Checkout</CheckoutButton>
+          </CartBill>
         </CartItemsAndBillWrapper>
       </CartContents>
     </CartContainer>
@@ -130,5 +199,6 @@ export default connect(mapStateToProps, {
   getCart,
   loadUserI,
   addProductToCart,
-  setAddingTrue,
+  decProductCount,
+  checkUnCheck,
 })(Cart);

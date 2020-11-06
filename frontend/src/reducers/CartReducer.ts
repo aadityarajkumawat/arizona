@@ -15,7 +15,7 @@ export const cartReducer = (
   action: MyTypes.RootAction
 ): CartReducerState => {
   switch (action.type) {
-    case CartTypes.ADD_PRODUCT_CART:
+    case CartTypes.UPDATE_CART:
       localStorage.setItem("cart", JSON.stringify(action.payload));
       return {
         ...state,

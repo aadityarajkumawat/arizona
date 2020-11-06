@@ -8,14 +8,19 @@ import {
   CateImage,
 } from "./categories.styles";
 import { connect } from "react-redux";
-import { clearSearch, getProducts } from "../actions/Products";
+import { clearSearch, getProducts, setCategory } from "../actions/Products";
 
 interface Props {
   getProducts: (fetchByCategory: string) => void;
   clearSearch: () => void;
+  setCategory: (categoryName: string) => void;
 }
 
-const Categories: React.FC<Props> = ({ getProducts, clearSearch }) => {
+const Categories: React.FC<Props> = ({
+  getProducts,
+  clearSearch,
+  setCategory,
+}) => {
   return (
     <CategoriesContainer>
       <CategoriesContents>
@@ -24,6 +29,7 @@ const Categories: React.FC<Props> = ({ getProducts, clearSearch }) => {
             onClick={() => {
               clearSearch();
               getProducts("Jackets");
+              setCategory("Jackets");
             }}
           >
             <CateImage />
@@ -36,6 +42,7 @@ const Categories: React.FC<Props> = ({ getProducts, clearSearch }) => {
             onClick={() => {
               clearSearch();
               getProducts("Hoodies");
+              setCategory("Hoodies");
             }}
           >
             <CateImage />
@@ -47,7 +54,8 @@ const Categories: React.FC<Props> = ({ getProducts, clearSearch }) => {
           <CategoryItem
             onClick={() => {
               clearSearch();
-              getProducts("Cardigan");
+              getProducts("Cardigans");
+              setCategory("Cardigans");
             }}
           >
             <CateImage />
@@ -60,6 +68,7 @@ const Categories: React.FC<Props> = ({ getProducts, clearSearch }) => {
             onClick={() => {
               clearSearch();
               getProducts("Apparels");
+              setCategory("Apparels");
             }}
           >
             <CateImage />
@@ -70,4 +79,6 @@ const Categories: React.FC<Props> = ({ getProducts, clearSearch }) => {
     </CategoriesContainer>
   );
 };
-export default connect(null, { getProducts, clearSearch })(Categories);
+export default connect(null, { getProducts, clearSearch, setCategory })(
+  Categories
+);

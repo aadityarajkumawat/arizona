@@ -1,5 +1,9 @@
 import styled from "styled-components";
 
+interface CartStyles {
+  checkB: boolean;
+}
+
 export const CartContainer = styled.div`
   width: 100%;
   //   height: 600px;
@@ -43,6 +47,8 @@ export const CartBill = styled.div`
   justify-self: end;
   height: 200px;
   background-color: #eee;
+  padding: 40px;
+  padding-top: 25px;
 `;
 
 export const CartItem = styled.div`
@@ -65,11 +71,17 @@ export const MainCartItem = styled.div`
   display: flex;
 `;
 
-export const CheckBox = styled.div`
+export const CheckBox = styled.button<CartStyles>`
   width: 20px;
   height: 20px;
+  border: none;
   border-radius: 5px;
-  background-color: #c4c4c4;
+  background-color: ${({ checkB }) => (!checkB ? "#c4c4c4" : "#222")};
+
+  &:active,
+  &:focus {
+    outline: none;
+  }
 `;
 
 export const CartProductImage = styled.img`
@@ -114,6 +126,7 @@ export const DescButton = styled.div`
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
   display: flex;
+  user-select: none;
   justify-content: center;
   background-color: #222;
   color: #eee;
@@ -142,4 +155,35 @@ export const IncButton = styled.div`
   border-top-right-radius: 8px;
   cursor: pointer;
   background-color: #222;
+  user-select: none;
+`;
+
+export const WhenCartIsEmpty = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-weight: 500;
+  font-size: 20px;
+`;
+
+export const BillFieldContainer = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+`;
+export const BillFieldName = styled.div``;
+
+export const BillFieldValue = styled.div``;
+
+export const CheckoutButton = styled.button`
+  width: 100%;
+  height: 35px;
+  border-radius: 10px;
+  border: none;
+  background-color: #222;
+  color: #eee;
+  margin-top: 15px;
+  cursor: pointer;
 `;

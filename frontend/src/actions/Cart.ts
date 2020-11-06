@@ -3,20 +3,6 @@ import * as MyTypes from "MyTypes";
 import { Dispatch } from "redux";
 import { CartTypes } from "./types";
 
-export interface AddProductData {
-  cart_id: string;
-  product_id: string;
-}
-
-export interface CartDataRecieved {
-  cart_id: string;
-  p_ids: Array<string>;
-}
-
-export interface ResBodyGetProducts {
-  cart_id: string;
-}
-
 type cartItems = Array<CartProducts>;
 
 export interface CartProducts {
@@ -26,6 +12,7 @@ export interface CartProducts {
   category: string;
   product_img: string;
   quantity: number;
+  checked: boolean;
 }
 
 export interface ProductData {
@@ -38,14 +25,10 @@ export interface ProductData {
 
 export const cartActions = {
   addProductToCart: (productData: cartItems) =>
-    action(CartTypes.ADD_PRODUCT_CART, productData),
-
-  removeOne: () => action(CartTypes.REMOVE_ONE_CART),
+    action(CartTypes.UPDATE_CART, productData),
 
   getCart: (dataCart: cartItems) =>
     action(CartTypes.GET_CART_PRODUCTS, dataCart),
-
-  addedTrue: () => action(CartTypes.ADDED_TRUE),
 };
 
 export const addProductToCart = (productData: ProductData) => (
@@ -63,8 +46,11 @@ export const addProductToCart = (productData: ProductData) => (
       }
       if (count === 0) {
         dispatch({
-          type: CartTypes.ADD_PRODUCT_CART,
-          payload: [...parsedCart, { ...productData, quantity: count + 1 }],
+          type: CartTypes.UPDATE_CART,
+          payload: [
+            ...parsedCart,
+            { ...productData, quantity: count + 1, checked: true },
+          ],
         });
       } else {
         for (let product of parsedCart) {
@@ -72,12 +58,76 @@ export const addProductToCart = (productData: ProductData) => (
             product.quantity = product.quantity + 1;
           }
         }
-        console.log(count);
         dispatch({
-          type: CartTypes.ADD_PRODUCT_CART,
+          type: CartTypes.UPDATE_CART,
           payload: [...parsedCart],
         });
       }
+    }
+  }
+};
+
+export const decProductCount = (productData: ProductData) => (
+  dispatch: Dispatch<MyTypes.RootAction>
+) => {
+  if (localStorage.getItem("cart")) {
+    let finalArray = [];
+    let toBeDeleted = -1;
+    let currentCart = localStorage.getItem("cart");
+    if (typeof currentCart === "string") {
+      let parsedCart: Array<CartProducts> = JSON.parse(currentCart);
+      for (let i = 0; i < parsedCart.length; i++) {
+        if (parsedCart[i].product_id === productData.product_id) {
+          if (parsedCart[i].quantity > 1) {
+            parsedCart[i].quantity = parsedCart[i].quantity - 1;
+          } else {
+            toBeDeleted = i;
+          }
+        }
+      }
+      if (toBeDeleted > -1) {
+        let firstArr = JSON.parse(currentCart).splice(0, toBeDeleted);
+        let secondArr = JSON.parse(currentCart).splice(
+          toBeDeleted + 1,
+          parsedCart.length
+        );
+        finalArray = [...firstArr, ...secondArr];
+
+        dispatch({
+          type: CartTypes.UPDATE_CART,
+          payload: [...finalArray],
+        });
+      } else {
+        dispatch({
+          type: CartTypes.UPDATE_CART,
+          payload: [...parsedCart],
+        });
+      }
+    }
+  }
+};
+
+export const checkUnCheck = (productData: ProductData) => (
+  dispatch: Dispatch<MyTypes.RootAction>
+) => {
+  if (localStorage) {
+    let indexToBeUpdated = -1;
+    let currentCart = localStorage.getItem("cart");
+    if (typeof currentCart === "string") {
+      let parsedCart: Array<CartProducts> = JSON.parse(currentCart);
+
+      for (let i = 0; i < parsedCart.length; i++) {
+        if (productData.product_id === parsedCart[i].product_id) {
+          indexToBeUpdated = i;
+        }
+      }
+
+      if (indexToBeUpdated !== -1) {
+        parsedCart[indexToBeUpdated].checked = !parsedCart[indexToBeUpdated]
+          .checked;
+      }
+
+      dispatch({ type: CartTypes.UPDATE_CART, payload: [...parsedCart] });
     }
   }
 };

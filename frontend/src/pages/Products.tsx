@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import {
   AddToCartButton,
   LeftImage,
-  ProductCategory,
   ProductContentsContainer,
   ProductHeader,
   ProductImageMain,
@@ -18,18 +17,15 @@ import * as MyTypes from "MyTypes";
 import { ProductStateI } from "../reducers/productReducer";
 import { getProducts } from "../actions/Products";
 import { addProductToCart, ProductData } from "../actions/Cart";
-import { UserAuthState } from "../reducers/authReducer";
 
 interface Props {
   product: ProductStateI;
-  auth: UserAuthState;
   getProducts: (categoryToFetch: string) => void;
   addProductToCart: (productData: ProductData) => void;
 }
 
 const Product: React.FC<Props> = ({
   product,
-  auth,
   getProducts,
   addProductToCart,
 }) => {
@@ -105,7 +101,6 @@ const Product: React.FC<Props> = ({
 
 const mapStateToProps = (store: MyTypes.ReducerState) => ({
   product: store.product,
-  auth: store.auth,
 });
 
 export default connect(mapStateToProps, { getProducts, addProductToCart })(
