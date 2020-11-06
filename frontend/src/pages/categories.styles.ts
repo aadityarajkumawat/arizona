@@ -20,7 +20,7 @@ export const CategoryItem = styled.div`
   width: 270px;
   height: 280px;
   margin-bottom: 30px;
-  box-shadow: 4px 4px 4px 0px #00000018;
+  box-shadow: 4px 4px 4px 0px #00000018, -4px 0px 4px 0px #00000018;
   border-radius: 10px;
   cursor: pointer;
 `;

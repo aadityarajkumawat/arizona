@@ -27,6 +27,7 @@ export const DisplayHeading = styled.div`
 `;
 
 export const ItemsContainer = styled(motion.div)`
+  cursor: pointer;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   width: 100%;
@@ -45,9 +46,10 @@ export const ItemsContainer = styled(motion.div)`
 
 export const ProductItem = styled(motion.div)`
   width: 244px;
-  height: 316px;
+  height: 366px;
   border-radius: 10px;
   box-shadow: 4px 4px 4px 0px #00000010, -4px 0px 4px 0px #00000010;
+  transition: all 0.1s ease;
   @media screen and (max-width: 1330px) {
     width: 200px;
     height: 260px;
@@ -55,11 +57,15 @@ export const ProductItem = styled(motion.div)`
   @media screen and (max-width: 1120px) {
     margin-bottom: 35px;
   }
+
+  &:hover {
+    transform: scale(1.1);
+  }
 `;
 
 export const ProductImageContainer = styled.div`
   width: 100%;
-  height: 244px;
+  height: 274px;
 
   @media screen and (max-width: 1330px) {
     height: 200px;
@@ -70,7 +76,7 @@ export const ProductImageContainer = styled.div`
 
 export const ExploreActionSection = styled.div`
   width: 100%;
-  height: calc(100% - 244px);
+  height: calc(100% - 274px);
 
   @media screen and (max-width: 1330px) {
     height: calc(100% - 200px);

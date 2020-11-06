@@ -35,9 +35,8 @@ const Home: React.FC<Props> = ({ toggleMUNav, resetSubmitState }) => {
           <BannerImage src={BannerImg}></BannerImage>
         </BannerContent>
       </HomeBanner>
-      <HomeDisplay />
-      <HomeDisplay />
-      <HomeDisplay />
+      <HomeDisplay title='Fresh Arrivals' />
+      <HomeDisplay title='Limited in stock' />
 
       <ExploreReDir>
         <ExploreText>Explore More</ExploreText>
