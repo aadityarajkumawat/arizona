@@ -12,6 +12,8 @@ import {
   NavLinks,
   SearchComponent,
   SearchInputField,
+  SearchResItem,
+  SearchResults,
   SubItem,
 } from "./navbar.styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
@@ -67,6 +69,7 @@ const Navbar: React.FC<Props> = ({
 }) => {
   const matches = useMediaQuery("(max-width: 1300px)");
   const [searchAnimation, setSearchAnimation] = useState({ opacity: 1 });
+  const [searchQuery, setSearchQuery] = useState<Array<string>>([]);
   const [animation, setAniamtion] = useState<NavlinksAnimation>({
     x: -20,
     opacity: 1,
@@ -99,6 +102,7 @@ const Navbar: React.FC<Props> = ({
   };
 
   const openSearchBar = () => {
+    setSearchQuery([]);
     if (searchAnimation.opacity === 1) {
       setSearchAnimation((prev) => ({ ...prev, opacity: 0 }));
     } else {
@@ -112,7 +116,30 @@ const Navbar: React.FC<Props> = ({
     }
   };
 
-  //? if window size < 1300 then matches is **true**
+  const searchProducts = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    const array: Array<string> = [
+      "Jackets",
+      "Mens jackets",
+      "Hoodies",
+      "Hoodies for men",
+      "Winter Hoodies",
+      "Cardigan",
+      "Black Cardigan",
+      "gloves",
+      "socks",
+      "glasses",
+    ];
+    const searchRegExp = new RegExp(value, "gi");
+
+    if (value !== "") {
+      const filtered = array.filter((q) => q.match(searchRegExp));
+      setSearchQuery(filtered);
+    } else {
+      setSearchQuery([]);
+    }
+  };
 
   useEffect(() => {
     if (matches) {
@@ -159,11 +186,22 @@ const Navbar: React.FC<Props> = ({
                       animate={{ width: 170 }}
                       transition={{ duration: 0.3 }}
                       spellCheck="false"
+                      onChange={searchProducts}
+                      queryRes={searchQuery.length > 0 ? true : false}
                     ></SearchInputField>
-                    <CloseInputField onClick={openSearchBar}></CloseInputField>
+                    <CloseInputField
+                      onClick={openSearchBar}
+                      queryRes={searchQuery.length > 0 ? true : false}
+                    ></CloseInputField>
+                    {searchQuery.length > 0 && (
+                      <SearchResults>
+                        {searchQuery.map((res) => (
+                          <SearchResItem>{res}</SearchResItem>
+                        ))}
+                      </SearchResults>
+                    )}
                   </SearchComponent>
                 )}
-
                 <ListItem
                   animate={{
                     x: animation.x,

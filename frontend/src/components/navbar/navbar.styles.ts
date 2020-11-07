@@ -9,6 +9,10 @@ interface DropDownStyled {
   listener: boolean;
 }
 
+interface SearchInputI {
+  queryRes: boolean;
+}
+
 export const NavbarParentContainer = styled.div`
   width: 100vw;
   height: 80px;
@@ -113,17 +117,17 @@ export const SearchComponent = styled(motion.li)<NavbarStyles>`
   align-items: center;
   width: 200px;
   height: 30px;
-  margin-right: ${({ navType }) => (navType ? "0" : "25px")};
+  margin-right: ${({ navType }) => (navType ? "0" : "30px")};
 `;
 
-export const SearchInputField = styled(motion.input)`
+export const SearchInputField = styled(motion.input)<SearchInputI>`
   width: 0px;
   height: 30px;
   border: none;
   background-color: #eee;
   padding: 5px 15px;
-  border-top-left-radius: 30px;
-  border-bottom-left-radius: 30px;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: ${({ queryRes }) => (!queryRes ? "20px" : "0px")};
 
   &:active {
     outline: 0;
@@ -134,11 +138,11 @@ export const SearchInputField = styled(motion.input)`
   }
 `;
 
-export const CloseInputField = styled(motion.div)`
+export const CloseInputField = styled(motion.div)<SearchInputI>`
   width: 30px;
   height: 30px;
-  border-top-right-radius: 30px;
-  border-bottom-right-radius: 30px;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: ${({ queryRes }) => (!queryRes ? "20px" : "0px")};
   background-color: #eee;
   display: flex;
   justify-content: center;
@@ -150,7 +154,7 @@ export const CloseInputField = styled(motion.div)`
   &::after {
     position: absolute;
     content: "";
-    width: 20px;
+    width: 15px;
     left: 0;
     height: 2px;
     border-radius: 1px;
@@ -208,4 +212,22 @@ export const SubItem = styled(motion.li)`
       color: #22222250;
     }
   }
+`;
+
+export const SearchResults = styled.ul`
+  position: absolute;
+  width: 200px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  top: 30px;
+  background-color: #eee;
+  list-style: none;
+`;
+
+export const SearchResItem = styled.li`
+  width: 100%;
+  margin: 8px 0;
 `;
