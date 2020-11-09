@@ -49,7 +49,6 @@ export const NavLinks = styled(motion.ul)<NavbarStyles>`
   width: ${({ navType }) => (navType ? "100vw" : "")};
   left: 0;
   right: 0;
-  // transform: ${({ navType }) => (navType ? "translateX(-20px)" : "")};
   padding: ${({ navType }) => (navType ? "30px 0" : "")};
 
   .category {
@@ -173,7 +172,6 @@ export const CloseInputField = styled(motion.div)<SearchInputI>`
 export const CategoryDropDownList = styled(motion.ul)<DropDownStyled>`
   position: absolute;
   margin-top: 1rem;
-  // left: 0;
   width: 120px;
   right: 0;
   background-color: #eee;

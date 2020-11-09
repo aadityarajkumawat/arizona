@@ -2,7 +2,6 @@ import React, { useState, useEffect, Fragment } from "react";
 import {
   BrandName,
   CategoryDropDownList,
-  CloseInputField,
   Ham,
   HamMenu,
   ListItem,
@@ -10,10 +9,6 @@ import {
   NavbarChildContainer,
   NavbarParentContainer,
   NavLinks,
-  SearchComponent,
-  SearchInputField,
-  SearchResItem,
-  SearchResults,
   SubItem,
 } from "./navbar.styles";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
@@ -30,6 +25,8 @@ import {
 import { UserAuthState } from "../../reducers/authReducer";
 import { logout, resetSubmitState } from "../../actions/Auth";
 import { clearSearch, getProducts, setCategory } from "../../actions/Products";
+import SearchComponent1 from "./SearchComponent1";
+import { searchProductsExporter } from "../../helpers/searchProducts";
 
 interface Props {
   showDeskType: () => void;
@@ -47,9 +44,9 @@ interface Props {
   auth: UserAuthState;
 }
 
-interface NavlinksAnimation {
-  x: number;
-  opacity: number;
+export interface NavlinksAnimation {
+  x: 20 | -20;
+  opacity: 0 | 1;
   duration: number;
   delay: number;
 }
@@ -67,8 +64,15 @@ const Navbar: React.FC<Props> = ({
   nav,
   auth,
 }) => {
+  /* Media query for navbar */
   const matches = useMediaQuery("(max-width: 1300px)");
-  const [searchAnimation, setSearchAnimation] = useState({ opacity: 1 });
+
+  /** Component local states
+   * search bar animation
+   * searching query and returning array of matches
+   * navbar animations
+   */
+  const [searchAnimation, setSearchAnimation] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<Array<string>>([]);
   const [animation, setAniamtion] = useState<NavlinksAnimation>({
     x: -20,
@@ -77,159 +81,111 @@ const Navbar: React.FC<Props> = ({
     delay: 1,
   });
 
-  const reverseAnimationAndUnmountNav = () => {
-    if (animation.x === -20) {
-      setAniamtion((prev) => ({
-        ...prev,
-        x: 20,
-        opacity: 1,
-      }));
-    } else {
-      setAniamtion((prev) => ({
-        ...prev,
-        x: -20,
-        opacity: 0,
-      }));
-    }
+  /** Destructuring objects used regularly */
+  const { x, opacity, duration, delay } = animation;
+  const { isDropDownShown, navIsMounted, navbarType, setNavOpen } = nav;
+  const { isAuthenticated } = auth;
 
-    if (nav.setNavOpen) {
-      setTimeout(() => {
-        toggleNav(!nav.setNavOpen);
-      }, 1000);
-    } else {
-      toggleNav(!nav.setNavOpen);
-    }
+  /** Navbar search animation
+   * in mobile and in desktop view
+   */
+  const reverseAnimationAndUnmountNav = () => {
+    x === -20
+      ? setAniamtion((prev) => ({ ...prev, x: 20, opacity: 1 }))
+      : setAniamtion((prev) => ({ ...prev, x: -20, opacity: 0 }));
+
+    setNavOpen
+      ? setTimeout(() => {
+          toggleNav(!setNavOpen);
+        }, 1000)
+      : toggleNav(!setNavOpen);
   };
 
+  /** close search bar and
+   * reset local state of query results
+   */
   const openSearchBar = () => {
     setSearchQuery([]);
-    if (searchAnimation.opacity === 1) {
-      setSearchAnimation((prev) => ({ ...prev, opacity: 0 }));
-    } else {
-      setSearchAnimation((prev) => ({ ...prev, opacity: 1 }));
-    }
+    setSearchAnimation((prev) => !prev);
   };
 
-  const logoutFromHere = () => {
-    if (auth.isAuthenticated) {
-      logout();
-    }
-  };
-
-  const searchProducts = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-
-    const array: Array<string> = [
-      "Jackets",
-      "Mens jackets",
-      "Hoodies",
-      "Hoodies for men",
-      "Winter Hoodies",
-      "Cardigan",
-      "Black Cardigan",
-      "gloves",
-      "socks",
-      "glasses",
-    ];
-    const searchRegExp = new RegExp(value, "gi");
-
-    if (value !== "") {
-      const filtered = array.filter((q) => q.match(searchRegExp));
-      setSearchQuery(filtered);
-    } else {
-      setSearchQuery([]);
-    }
-  };
-
+  /** Toggle b/w mobile and desktop type navbars
+   * depending on window size
+   *
+   *
+   */
   useEffect(() => {
-    if (matches) {
-      showMobType();
-    } else {
-      showDeskType();
-      setAniamtion((prev) => ({ ...prev, opacity: 1 }));
-    }
+    matches ? showMobType() : showDeskType();
+    setAniamtion((prev) => ({ ...prev, opacity: 1, x: 20 }));
     toggleNav(false);
   }, [matches]);
 
   return (
     <Fragment>
-      {nav.navIsMounted && (
+      {navIsMounted && (
         <NavbarParentContainer>
           <NavbarChildContainer>
             <BrandName>A R I Z O N A</BrandName>
-            {(nav.navbarType === "desk" || nav.setNavOpen) && (
-              <NavLinks navType={nav.setNavOpen}>
-                {searchAnimation.opacity === 1 && (
+            {(navbarType === "desk" || setNavOpen) && (
+              <NavLinks navType={setNavOpen}>
+                {!searchAnimation && (
                   <ListItem
                     onClick={openSearchBar}
                     animate={{
-                      x: animation.x,
-                      opacity: animation.opacity,
+                      x: x,
+                      opacity: opacity,
                     }}
                     transition={{
-                      duration: animation.duration,
-                      delay: animation.delay * 0,
+                      duration: duration,
+                      delay: delay * 0,
                     }}
-                    navType={nav.setNavOpen}
+                    navType={setNavOpen}
                   >
                     Search
                   </ListItem>
                 )}
-                {searchAnimation.opacity === 0 && (
-                  <SearchComponent
-                    navType={nav.setNavOpen}
-                    animate={{ x: animation.x, opacity: animation.opacity }}
-                    transition={{ duration: animation.duration }}
-                  >
-                    <SearchInputField
-                      placeholder="Search"
-                      animate={{ width: 170 }}
-                      transition={{ duration: 0.3 }}
-                      spellCheck="false"
-                      onChange={searchProducts}
-                      queryRes={searchQuery.length > 0 ? true : false}
-                    ></SearchInputField>
-                    <CloseInputField
-                      onClick={openSearchBar}
-                      queryRes={searchQuery.length > 0 ? true : false}
-                    ></CloseInputField>
-                    {searchQuery.length > 0 && (
-                      <SearchResults>
-                        {searchQuery.map((res) => (
-                          <SearchResItem>{res}</SearchResItem>
-                        ))}
-                      </SearchResults>
-                    )}
-                  </SearchComponent>
+                {searchAnimation && (
+                  <SearchComponent1
+                    animation={animation}
+                    nav={{
+                      isDropDownShown,
+                      navIsMounted,
+                      navbarType,
+                      setNavOpen,
+                    }}
+                    openSearchBar={openSearchBar}
+                    searchProducts={searchProductsExporter(setSearchQuery)}
+                    searchQuery={searchQuery}
+                  />
                 )}
                 <ListItem
                   animate={{
-                    x: animation.x,
-                    opacity: animation.opacity,
+                    x: x,
+                    opacity: opacity,
                   }}
                   transition={{
-                    duration: animation.duration,
-                    delay: animation.delay * 0,
+                    duration: duration,
+                    delay: delay * 0,
                   }}
-                  navType={nav.setNavOpen}
+                  navType={setNavOpen}
                 >
                   <Link to="/">Home</Link>
                 </ListItem>
                 <ListItem
                   className="category"
-                  animate={{ x: animation.x, opacity: animation.opacity }}
+                  animate={{ x: x, opacity: opacity }}
                   transition={{
-                    duration: animation.duration,
-                    delay: animation.delay * 0.1,
+                    duration: duration,
+                    delay: delay * 0.1,
                   }}
-                  navType={nav.setNavOpen}
+                  navType={setNavOpen}
                   onHoverStart={() => mountDropDown()}
                   onHoverEnd={() => unmountDropDown()}
                 >
                   <Link to="/choose-category">Categories</Link>
-                  {nav.isDropDownShown && !matches && (
+                  {isDropDownShown && !matches && (
                     <CategoryDropDownList
-                      listener={nav.isDropDownShown}
+                      listener={isDropDownShown}
                       animate={{ opacity: 1, width: 200 }}
                       transition={{ duration: 0.3 }}
                     >
@@ -288,7 +244,7 @@ const Navbar: React.FC<Props> = ({
                   }}
                   navType={nav.setNavOpen}
                 >
-                  <Link to={"/auth"} onClick={logoutFromHere}>
+                  <Link to={"/auth"} onClick={logout}>
                     {auth.isAuthenticated ? "Logout" : "Login"}
                   </Link>
                 </ListItem>
