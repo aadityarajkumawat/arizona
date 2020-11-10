@@ -1,32 +1,39 @@
 import React, { useState, useEffect, Fragment } from "react";
+import * as MyTypes from "MyTypes";
+// Styled Components
 import {
   BrandName,
   CategoryDropDownList,
-  Ham,
-  HamMenu,
-  ListItem,
-  MidHam,
   NavbarChildContainer,
   NavbarParentContainer,
   NavLinks,
-  SubItem,
 } from "./navbar.styles";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { connect } from "react-redux";
-import * as MyTypes from "MyTypes";
-import { showDeskType, showMobType, toggleNav } from "../../actions/Navbar";
-import { NavbarStateI } from "../../reducers/navReducer";
-import { Link } from "react-router-dom";
+
+// Navbar actions
 import {
   toggleMUNav,
   mountDropDown,
   unmountDropDown,
 } from "../../actions/Navbar";
+
+// Related
+import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { NavbarStateI } from "../../reducers/navReducer";
 import { UserAuthState } from "../../reducers/authReducer";
-import { logout, resetSubmitState } from "../../actions/Auth";
-import { clearSearch, getProducts, setCategory } from "../../actions/Products";
-import SearchComponent1 from "./SearchComponent1";
 import { searchProductsExporter } from "../../helpers/searchProducts";
+import { logout, resetSubmitState } from "../../actions/Auth";
+import { showDeskType, showMobType, toggleNav } from "../../actions/Navbar";
+import { clearSearch, getProducts, setCategory } from "../../actions/Products";
+
+// Child Components
+import ListItem1 from "./ListItem1";
+import SubItem1 from "./SubItem1";
+import HamMenu1 from "./HamMenu1";
+import SearchComponent1 from "./SearchComponent1";
+
+// Material UI Core
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 interface Props {
   showDeskType: () => void;
@@ -45,8 +52,8 @@ interface Props {
 }
 
 export interface NavlinksAnimation {
-  x: 20 | -20;
-  opacity: 0 | 1;
+  x: number;
+  opacity: number;
   duration: number;
   delay: number;
 }
@@ -112,13 +119,27 @@ const Navbar: React.FC<Props> = ({
   /** Toggle b/w mobile and desktop type navbars
    * depending on window size
    *
+   * slide in navlinks and make'em visible
    *
+   * set navbar type to false
    */
   useEffect(() => {
     matches ? showMobType() : showDeskType();
-    setAniamtion((prev) => ({ ...prev, opacity: 1, x: 20 }));
+    setAniamtion((prev) => ({ ...prev, opacity: 1, x: -20 }));
     toggleNav(false);
   }, [matches]);
+
+  /** Breaking this down into 3 steps
+   *
+   * clear the previous search query
+   * update the searched query
+   * fetch new products depending on updated query
+   */
+  const clearSearchGetProductsSetCategory = (categoryName: string) => {
+    clearSearch();
+    setCategory(categoryName);
+    getProducts(categoryName);
+  };
 
   return (
     <Fragment>
@@ -128,145 +149,94 @@ const Navbar: React.FC<Props> = ({
             <BrandName>A R I Z O N A</BrandName>
             {(navbarType === "desk" || setNavOpen) && (
               <NavLinks navType={setNavOpen}>
-                {!searchAnimation && (
-                  <ListItem
-                    onClick={openSearchBar}
-                    animate={{
-                      x: x,
-                      opacity: opacity,
-                    }}
-                    transition={{
-                      duration: duration,
-                      delay: delay * 0,
-                    }}
-                    navType={setNavOpen}
+                {!searchAnimation ? (
+                  /** navbar search bar search link */
+                  <ListItem1
+                    onClick={() => openSearchBar()}
+                    x={x}
+                    opacity={opacity}
+                    mul={0}
+                    setNavOpen={setNavOpen}
+                    navLinkName={"Search"}
                   >
                     Search
-                  </ListItem>
-                )}
-                {searchAnimation && (
+                  </ListItem1>
+                ) : (
+                  /** Search bar appears when search link disappears */
                   <SearchComponent1
                     animation={animation}
-                    nav={{
-                      isDropDownShown,
-                      navIsMounted,
-                      navbarType,
-                      setNavOpen,
-                    }}
+                    nav={nav}
                     openSearchBar={openSearchBar}
                     searchProducts={searchProductsExporter(setSearchQuery)}
                     searchQuery={searchQuery}
                   />
                 )}
-                <ListItem
-                  animate={{
-                    x: x,
-                    opacity: opacity,
-                  }}
-                  transition={{
-                    duration: duration,
-                    delay: delay * 0,
-                  }}
-                  navType={setNavOpen}
+                <ListItem1
+                  x={x}
+                  opacity={opacity}
+                  mul={0}
+                  setNavOpen={setNavOpen}
                 >
                   <Link to="/">Home</Link>
-                </ListItem>
-                <ListItem
+                </ListItem1>
+                {/** Category navbar link item */}
+                <ListItem1
                   className="category"
-                  animate={{ x: x, opacity: opacity }}
-                  transition={{
-                    duration: duration,
-                    delay: delay * 0.1,
-                  }}
-                  navType={setNavOpen}
+                  x={x}
+                  opacity={opacity}
+                  mul={0.1}
+                  setNavOpen={setNavOpen}
                   onHoverStart={() => mountDropDown()}
                   onHoverEnd={() => unmountDropDown()}
                 >
                   <Link to="/choose-category">Categories</Link>
+                  {/** The category drop down list */}
                   {isDropDownShown && !matches && (
                     <CategoryDropDownList
                       listener={isDropDownShown}
                       animate={{ opacity: 1, width: 200 }}
                       transition={{ duration: 0.3 }}
                     >
-                      <SubItem
-                        layout
-                        onClick={() => {
-                          clearSearch();
-                          getProducts("Jackets");
-                          setCategory("Jackets");
-                        }}
-                        key="Jacket"
-                      >
-                        <Link to="/categories">Jackets</Link>
-                      </SubItem>
-                      <SubItem
-                        layout
-                        onClick={() => {
-                          clearSearch();
-                          getProducts("Hoodies");
-                          setCategory("Hoodies");
-                        }}
-                        key="Hoodies"
-                      >
-                        <Link to="/categories">Hoodies</Link>
-                      </SubItem>
-                      <SubItem
-                        layout
-                        onClick={() => {
-                          clearSearch();
-                          getProducts("Cardigans");
-                          setCategory("Cardigans");
-                        }}
-                        key="Cardigans"
-                      >
-                        <Link to="/categories">Cardigans</Link>
-                      </SubItem>
-                      <SubItem
-                        layout
-                        onClick={() => {
-                          clearSearch();
-                          getProducts("Apparels");
-                          setCategory("Apparels");
-                        }}
-                        key="Apparels"
-                      >
-                        <Link to="/categories">Apparels</Link>
-                      </SubItem>
+                      <SubItem1
+                        categoryName="Jackets"
+                        categoryHandler={clearSearchGetProductsSetCategory}
+                      />
+                      <SubItem1
+                        categoryName="Hoodies"
+                        categoryHandler={clearSearchGetProductsSetCategory}
+                      />
+                      <SubItem1
+                        categoryName="Cardigans"
+                        categoryHandler={clearSearchGetProductsSetCategory}
+                      />
+                      <SubItem1
+                        categoryName="Apparels"
+                        categoryHandler={clearSearchGetProductsSetCategory}
+                      />
                     </CategoryDropDownList>
                   )}
-                </ListItem>
-                <ListItem
-                  animate={{ x: animation.x, opacity: animation.opacity }}
-                  transition={{
-                    duration: animation.duration,
-                    delay: animation.delay * 0.2,
-                  }}
-                  navType={nav.setNavOpen}
+                </ListItem1>
+                <ListItem1
+                  x={x}
+                  opacity={opacity}
+                  mul={0.2}
+                  setNavOpen={setNavOpen}
                 >
                   <Link to={"/auth"} onClick={logout}>
-                    {auth.isAuthenticated ? "Logout" : "Login"}
+                    {isAuthenticated ? "Logout" : "Login"}
                   </Link>
-                </ListItem>
-                <ListItem
-                  animate={{ x: animation.x, opacity: animation.opacity }}
-                  transition={{
-                    duration: animation.duration,
-                    delay: animation.delay * 0.3,
-                  }}
-                  navType={nav.setNavOpen}
+                </ListItem1>
+                <ListItem1
+                  x={x}
+                  opacity={opacity}
+                  setNavOpen={setNavOpen}
+                  mul={0.3}
                 >
                   <Link to="/cart">Cart</Link>
-                </ListItem>
+                </ListItem1>
               </NavLinks>
             )}
-            {nav.navbarType === "mob" && (
-              <HamMenu onClick={() => reverseAnimationAndUnmountNav()}>
-                <Ham></Ham>
-                <MidHam></MidHam>
-                <Ham></Ham>
-              </HamMenu>
-            )}
+            <HamMenu1 nav={nav} handleNav={reverseAnimationAndUnmountNav} />
           </NavbarChildContainer>
         </NavbarParentContainer>
       )}
