@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import * as MyTypes from "MyTypes";
 import { connect } from "react-redux";
-import { FormTypeReducer} from "../../reducers/authFormReducer";
+import { FormTypeReducer } from "../../reducers/authFormReducer";
 import { showLoginForm, showSignUpForm } from "../../actions/AuthFormState";
 import {
   formSubmit,
@@ -16,13 +16,13 @@ import {
   isLoginDataValid,
   isUserDataValid,
 } from "../../validators/formValidators";
-import Input from "../input-field/Input";
 import {
   AuthForm,
   ChangeFormType,
   ShowOtherForm,
   SubmitFormButton,
 } from "./auth.styles";
+import Input from "../input-field/Input";
 import { UserAuthState } from "../../reducers/authReducer";
 
 interface Props {
@@ -76,6 +76,18 @@ const Auth: React.FC<Props> = ({
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     formSubmit();
+    /** If form type is login
+     *
+     * validate login credentials
+     * if valid then login user
+     * else show alert based on entered credentials
+     *
+     * If form type is signup
+     *
+     * validate signup credentials
+     * if valid then signup user
+     * else show an alert
+     */
     if (authForm.formType === "login") {
       if (await isLoginDataValid(email, password)) {
         login(user);
@@ -92,6 +104,10 @@ const Auth: React.FC<Props> = ({
         resetSubmitState();
       }
     }
+    /** If authenticated
+     * load user by JWT and
+     * reset the form for next time
+     */
     loadUserI();
     setUser({ email: "", name: "", password: "", phone: "" });
   };

@@ -47,6 +47,14 @@ interface Props {
   checkUnCheck: (prodData: ProductData) => void;
 }
 
+interface AddProductToCartI {
+  product_name: string;
+  product_price: string;
+  category: string;
+  product_img: string;
+  product_id: string;
+}
+
 const Cart: React.FC<Props> = ({
   loadUserI,
   getCart,
@@ -58,45 +66,36 @@ const Cart: React.FC<Props> = ({
 }) => {
   const [bill, setBill] = useState<number>(0);
 
+  const { user } = auth;
+  const { cart_id } = user;
+  const { cartProducts } = cart;
+
+  /** when cart id changes -> a new user logs-in
+   * load the user and fetch his cart
+   */
   useEffect(() => {
     loadUserI();
     getCart();
-  }, [auth.user.cart_id]);
+  }, [cart_id]);
 
+  /** when cart items changes update the
+   * total bill section updating or
+   * refreshing it instantly
+   */
   useEffect(() => {
     getTotalBill();
-  }, [JSON.stringify(cart.cartProducts)]);
+  }, [JSON.stringify(cartProducts)]);
 
-  const IncQuantity = (
-    product_name: string,
-    product_price: string,
-    category: string,
-    product_img: string,
-    product_id: string
-  ) => {
-    addProductToCart({
-      product_name,
-      product_price,
-      category,
-      product_img,
-      product_id,
-    });
+  /** Incerease and Decerease the number
+   * of products in cart to which a useEffect hook
+   * is listening for changes in cart
+   */
+  const IncQuantity = (productInfo: AddProductToCartI) => {
+    addProductToCart(productInfo);
   };
 
-  const DecQuantity = (
-    product_name: string,
-    product_price: string,
-    category: string,
-    product_img: string,
-    product_id: string
-  ) => {
-    decProductCount({
-      product_name,
-      product_price,
-      category,
-      product_img,
-      product_id,
-    });
+  const DecQuantity = (productInfo: AddProductToCartI) => {
+    decProductCount(productInfo);
   };
 
   const getTotalBill = () => {
@@ -132,31 +131,11 @@ const Cart: React.FC<Props> = ({
                         Rs. {product.product_price}
                       </CartProductPrice>
                       <QuantitySelector>
-                        <DescButton
-                          onClick={() =>
-                            DecQuantity(
-                              product.product_name,
-                              product.product_price,
-                              product.category,
-                              product.product_img,
-                              product.product_id
-                            )
-                          }
-                        >
+                        <DescButton onClick={() => DecQuantity(product)}>
                           -
                         </DescButton>
                         <ActualQuantity>{product.quantity}</ActualQuantity>
-                        <IncButton
-                          onClick={() =>
-                            IncQuantity(
-                              product.product_name,
-                              product.product_price,
-                              product.category,
-                              product.product_img,
-                              product.product_id
-                            )
-                          }
-                        >
+                        <IncButton onClick={() => IncQuantity(product)}>
                           +
                         </IncButton>
                       </QuantitySelector>

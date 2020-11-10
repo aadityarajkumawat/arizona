@@ -2,8 +2,8 @@ import React from "react";
 import { AuthInput } from "../auth/auth.styles";
 
 interface Props {
-  iType: string;
   changeListener: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  iType: string;
   iValue: string;
 }
 
